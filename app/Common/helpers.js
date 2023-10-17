@@ -56,13 +56,48 @@ export const generateJWT = (
     exp,
   };
 
-  const headerBase64 = Buffer.from(JSON.stringify(header)).toString(
-    "base64url"
-  );
-  const payloadBase64 = Buffer.from(JSON.stringify(payload)).toString(
-    "base64url"
-  );
+  const headerBase64 = Buffer.from(JSON.stringify(header)).toString("base64url");
+  const payloadBase64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
   const signature = hashString(`${headerBase64}.${payloadBase64}`);
 
   return `${headerBase64}.${payloadBase64}.${signature}`;
 };
+
+export const parserJWT = (token) => {
+  const response = {
+    success : false,
+  };
+
+  if(!token || typeof token !== 'string') {
+    response.error = "Token khong hop le";
+
+    return response;
+  };
+
+  try {
+    const [headerBase64, payloadBase64, signature] = token.split(" ")[1].split('.');
+    const header = JSON.parse(Buffer.from(headerBase64, "base64").toString());
+    const payload = JSON.parse(Buffer.from(payloadBase64, "base64").toString());
+
+    if(hashString(`${headerBase64}.${payloadBase64}`, header.alg)  !== signature) {
+      response.error = "Token khong dung";
+
+      return response;
+    };
+
+    if (moment().unix() > payload.exp) {
+      response.error = "Token het han";
+
+      return response;
+    }
+
+    response.success = true;
+    response.payload = payload;
+
+    return response;
+  } catch (e) {
+    response.error = e.message;
+
+    return response;
+  }
+}

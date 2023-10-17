@@ -15,6 +15,7 @@ class AuthService {
           username: userEmailPhone,
         },
       ],
+      level: 1
     });
     if (!userByName) {
       throw new Error("Tai khoan khong chinh xac");
@@ -22,7 +23,6 @@ class AuthService {
     if (hashString(password) !== userByName.password) {
       throw new Error("Mat khau khong chinh xac");
     }
-    console.log("2");
 
     return {
       token: generateJWT(userByName),

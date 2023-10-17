@@ -20,11 +20,11 @@ export const storeUpdateUserValidator = baseJoiValidator(
       "string.max": "So dien thoai nho hon hoac bang {{#limit}} ky tu",
       "any.required": "So dien thoai khong duoc de trong",
     }),
-    password: Joi.string().min(8).required().messages({
-      "string.base": "Password phai la chuoi",
-      "string.min": "Password lon hon hoac bang {{#limit}} ky tu",
-      "any.required": "Password khong duoc de trong",
-    }),
+    // password: Joi.string().min(8).required().messages({
+    //   "string.base": "Password phai la chuoi",
+    //   "string.min": "Password lon hon hoac bang {{#limit}} ky tu",
+    //   "any.required": "Password khong duoc de trong",
+    // }),
     gender: Joi.number()
       .valid(USERS.gender.male, USERS.gender.female)
       .default(USERS.gender.male)

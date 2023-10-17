@@ -3,7 +3,7 @@ import { baseJoiValidator } from "../BaseValidation.js";
 
 export const loginAuthValidator = baseJoiValidator(
   Joi.object({
-    userByName: Joi.string().required().messages({
+    userEmailPhone: Joi.string().required().messages({
       "string.base": "Ten dang nhap phai la chuoi",
       "any.required": "Ten dang nhap khong duoc de trong",
     }),

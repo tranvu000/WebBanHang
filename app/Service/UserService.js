@@ -41,6 +41,7 @@ class UserService {
 
   async show(userId) {
     const user = await User.findById(userId);
+    
     return user;
   }
 
