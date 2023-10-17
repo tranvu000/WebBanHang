@@ -3,20 +3,15 @@ import dotenv from "dotenv";
 import router from "./router/index.js";
 import mongoose from "mongoose";
 
-
 dotenv.config();
 
-mongoose.connect(
-  process.env.MONGODB_URI,
-  {
-    autoIndex: true
-  }
-) .then(() => {
+mongoose
+  .connect(process.env.MONGODB_URI, {
+    autoIndex: true,
+  })
+  .then(() => {
     console.log("Connected");
-})
-
-
-
+  });
 
 const app = express();
 
