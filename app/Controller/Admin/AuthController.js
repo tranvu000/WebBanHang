@@ -15,25 +15,6 @@ class AuthController {
       res.status(500).json(responseError(e, 500));
     }
   };
-
-  async changePassword(req, res) {
-    const userService = UserService();
-    try {
-      res.ststus(201).json(
-        responseSuccess(
-          await userService.update(
-            req.authUser._id, 
-            {
-            password: hashString(req.body.password),
-            }
-          )
-        )
-      );
-    } catch (e) {
-      res.status(500).json(responseError(e, 500));
-    }
-    console.log(password);
-  }
 }
 
 export default AuthController;

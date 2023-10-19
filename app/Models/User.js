@@ -36,6 +36,9 @@ const userSchema = new mongoose.Schema(
     },
     avartar: {
       type: String,
+      get: (value) => {
+        return process.env.DOMAIN + '/user/avatar/' + value;
+      }
     },
     created_by: {
       type: ObjectId,

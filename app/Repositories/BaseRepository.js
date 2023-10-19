@@ -36,12 +36,13 @@ class BaseRepository {
     };
   }
 
-  async update(userId, data, authUser) {
+  async update(id, data, authUser) {
+    
     return await this.getModel().findByIdAndUpdate(
-      userId,
+      id,
       {
         ...data,
-        // update_by: authUser._id || null,
+        update_by: authUser?._id || null,
       },
       {
         new: true,
@@ -49,12 +50,12 @@ class BaseRepository {
     );
   }
 
-  async destroy(userId, authUser, softDelete = true) {
+  async destroy(id, authUser, softDelete = true) {
     if (softDelete) {
       return !!(await this.getModel().findByIdAndUpdate(
-        userId,
+        id,
         {
-          update_by: authUser._id || null,
+          update_by: authUser?._id || null,
           delete_at: moment().format("YYYY-MM-DD hh:mm:ss"),
         },
         {
@@ -66,6 +67,10 @@ class BaseRepository {
     const userDeleted = await this.getModel().findByIdAndDelete(userId);
 
     return !!userDeleted;
+  }
+
+  async findById(id) {
+    return {};
   }
 }
 

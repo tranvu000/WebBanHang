@@ -9,7 +9,6 @@ class UserController {
   static userService = new UserService();
 
   async store(req, res) {
-    console.log(req.authUser);
     try {
       const data = req.body;
       data.password = hashString("12345678");

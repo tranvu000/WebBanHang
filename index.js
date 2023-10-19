@@ -2,14 +2,17 @@ import express from "express";
 import dotenv from "dotenv";
 import router from "./router/index.js";
 import mongoose from "mongoose";
+import { MulterError } from "multer";
+import { responseError } from "./app/Common/helpers.js";
 
 dotenv.config();
 
 mongoose
-  .connect(process.env.MONGODB_URI, {
+  .connect(process.env.MONGODB_URI, 
+    {
     autoIndex: true,
-  })
-  .then(() => {
+    }
+  ).then(() => {
     console.log("Connected");
   });
 
@@ -19,6 +22,14 @@ app.use(express.json());
 app.use(express.static("storage"));
 
 router(app)
+
+app.use((err, req, res, next) => {
+  if(err instanceof MulterError) {
+    return res.status(422).json(responseError(err, 422))
+  }
+
+  res.json(responseError(err))
+});
 
 const PORT = process.env.PORT || 5050;
 

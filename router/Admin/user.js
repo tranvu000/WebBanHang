@@ -14,7 +14,7 @@ const adminUserRouter = (app) => {
   router.post("/", storeUpdateUserValidator, userController.store);
   router.get("/", IndexUserValidator, userController.index);
   router.get("/:userId", userController.show);
-  router.put("/:userId", userController.update);
+  router.put("/:userId",storeUpdateUserValidator, userController.update);
   router.delete("/:userId", userController.destroy);
 
   app.use("/users", router);
