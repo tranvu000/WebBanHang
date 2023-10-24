@@ -28,9 +28,6 @@ const categorySchema = new mongoose.Schema(
   },
 
   {
-    toJSON: {
-      getters: true,
-    },
     timestamps: {
       createdAt: 'created_at',
       updateAt: 'update_at'
