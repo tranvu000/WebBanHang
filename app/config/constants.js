@@ -8,3 +8,10 @@ export const USERS = {
     female: 2,
   },
 };
+
+export const PRODUCT = {
+  type: {
+    images: 1,
+    video: 2,
+  }
+};

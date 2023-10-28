@@ -43,14 +43,14 @@ const userSchema = new mongoose.Schema(
     created_by: {
       type: ObjectId,
     },
-    update_by: {
+    updated_by: {
       type: ObjectId,
     },
     created_at: {
       type: Date,
       timestamps: true,
     },
-    update_at: {
+    updated_at: {
       type: Date,
       timestamps: true,
     },
@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema(
     },
     timestamps: {
       createdAt: "created_at",
-      updateAt: "update_at",
+      updatedAt: "updated_at",
     },
   }
 );

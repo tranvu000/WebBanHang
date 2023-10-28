@@ -1,7 +1,8 @@
 import express from "express";
 import ProductController from "../../app/Controller/Admin/ProductController.js";
 import authMiddleware from "../../app/Middlewares/AuthMiddleware.js"
-import { storeUploadProductAnyMiddleware } from "../../app/Middlewares/StoreUploadProductAnyMiddleware.js";
+import { storeUpdateProductAnyMiddleware } from "../../app/Middlewares/StoreUpdateProductAnyMiddleware.js";
+import { indexProductValidator, storeUpdateProductValidator } from "../../app/Validations/Admin/ProductValidation.js";
 
 const productRouter = (app) => {
   const router = express.Router();
@@ -9,7 +10,7 @@ const productRouter = (app) => {
 
   router.use(authMiddleware);
 
-  router.post('/', storeUploadProductAnyMiddleware.any([
+  router.post('/', storeUpdateProductAnyMiddleware.any([
     {
       name: 'images',
       maxCount: 5,
@@ -23,9 +24,22 @@ const productRouter = (app) => {
       maxCount: 10,
     },
   ]), productController.store);
-  router.get('/', productController.index);
+  router.get('/', indexProductValidator, productController.index);
   router.get('/:productId', productController.show);
-  router.put('/:productId', productController.update);
+  router.put('/:productId', storeUpdateProductAnyMiddleware.any([
+    {
+      name: 'images',
+      maxCount: 5,
+    },
+    {
+      name: 'video',
+      maxCount: 1,
+    },
+    {
+      name: 'classifies[][classify_values][][image]',
+      maxCount: 10,
+    },
+  ]), productController.update);
   router.delete('/:productId', productController.destroy);
 
   app.use('/product', router)

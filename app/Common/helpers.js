@@ -20,7 +20,7 @@ export const responseError = (errors, status = 500) => {
   };
 
   if (errors.errors) {
-    response.errors = object.values(errors.errors).map((error) => {
+    response.errors = Object.values(errors.errors).map((error) => {
       return {
         [error.path]: {
           value: error.value,

@@ -14,7 +14,7 @@ class BaseRepository {
     });
   }
 
-  async index(conditions = {}, limit, page) {
+  async index(conditions = {}, limit, page, populate = []) {
     conditions.delete_at = null;
     limit = +limit;
     page = +page;
@@ -24,7 +24,8 @@ class BaseRepository {
       this.getModel()
         .find(conditions)
         .skip(limit * (page - 1))
-        .limit(limit),
+        .limit(limit)
+        .populate(populate),
     ]);
 
     return {
@@ -48,7 +49,7 @@ class BaseRepository {
         new: true,
       }
     );
-  }
+  };
 
   async destroy(id, authUser, softDelete = true) {
     if (softDelete) {
@@ -64,13 +65,16 @@ class BaseRepository {
       ));
     }
 
-    const userDeleted = await this.getModel().findByIdAndDelete(userId);
+    const userDeleted = await this.getModel().findByIdAndDelete(id);
 
     return !!userDeleted;
   }
 
   async findById(id) {
     return {};
+  }
+  async createMultiple(data) {
+    return this.getModel().create(data);
   }
 }
 

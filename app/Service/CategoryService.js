@@ -22,6 +22,7 @@ class CategoryService {
         name: new RegExp (`${name}`, 'i')
       }
     };
+    
     return await this.categoryRepository.index(conditions, limit, page);
   }
 

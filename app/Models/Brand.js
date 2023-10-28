@@ -13,19 +13,19 @@ const brandSchema = new mongoose.Schema (
     logo: {
       type: String,
       get: (value) => {
-        return process.env.DOMAIN + '/user/logo/' + value
+        return process.env.DOMAIN + '/product/logo/' + value
       }
     },
     created_by: {
       type: ObjectId
     },
-    update_by: {
+    updated_by: {
       type: ObjectId
     },
     created_at: {
       type: Date
     },
-    update_at: {
+    updated_at: {
       type: Date
     },
     deleted_at: {
@@ -40,7 +40,7 @@ const brandSchema = new mongoose.Schema (
 
     timestamps: {
       createdAt: "created_at",
-      updateAt: "update_at"
+      updatedAt: "updated_at"
     }
   }
 );

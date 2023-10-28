@@ -21,9 +21,6 @@ export const indexCategoryValidation = baseJoiValidator(
       'string.max': 'Ten san pham nho hon hoac bang {{#limit}} ky tu',
       'any.required': 'Ten san pham khong duoc de trong',
     }),
-    // description: Joi.string().optional().messages({
-    //   'string.base': 'Mo ta phai la chuoi',
-    // }),
     limit: Joi.number().optional().messages({
       "number.base": "Limit phai la number",
     }),
