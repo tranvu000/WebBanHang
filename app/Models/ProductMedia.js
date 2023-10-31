@@ -6,13 +6,9 @@ const productMediaSchema = new mongoose.Schema(
     url: {
       type: String,
       require: true,
-      // get: (value) => {
-      //   if ('images') {
-      //     return process.env.DOMAIN + '/product/any/images/' + value
-      //   } else if('video') {
-      //     return process.env.DOMAIN + '/product/any/video/' + value
-      //   }
-      // }
+      get: (value) => {
+        return process.env.DOMAIN + value;
+      }
     },
     type: {
       type: Number,

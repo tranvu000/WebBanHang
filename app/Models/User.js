@@ -38,7 +38,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       get: (value) => {
         return process.env.DOMAIN + '/user/avatar/' + value;
-      }
+      },
+      default:"default_avatar.png",
     },
     created_by: {
       type: ObjectId,
