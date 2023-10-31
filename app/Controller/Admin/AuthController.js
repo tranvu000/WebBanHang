@@ -1,15 +1,16 @@
 import { hashString, responseError, responseSuccess } from '../../Common/helpers.js';
 import AuthService from '../../Service/AuthService.js';
-import UserService from '../../Service/UserService.js';
 
 class AuthController {
+  static authService = new AuthService();
   async login(req, res) {
-    const authService = new AuthService();
     try {
       res.status(201).json(responseSuccess(
-        await authService.login(
-          req.body.userEmailPhone, req.body.password
-        )
+        await AuthController.authService.login(
+          req.body.userEmailPhone,
+          req.body.password
+        ),
+        201
       ));
     } catch (e) {
       res.status(500).json(responseError(e, 500));

@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
     },
-    avartar: {
+    avatar: {
       type: String,
       get: (value) => {
         return process.env.DOMAIN + '/user/avatar/' + value;
