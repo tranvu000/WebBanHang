@@ -24,7 +24,7 @@ const productRouter = (app) => {
       maxCount: 10,
     },
   ]), productController.store);
-  router.get('/', indexProductValidator, productController.index);
+  router.get('/', productController.index);
   router.get('/:productId', productController.show);
   router.put('/:productId', storeUpdateProductAnyMiddleware.any([
     {

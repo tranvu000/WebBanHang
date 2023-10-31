@@ -230,23 +230,47 @@ class ProductService {
   };
 
   async destroy(productId) {
-    const productDelete = await Product.findById(productId);
-    await productDelete.populate([
-      {
-        path: 'productMedia',
-      },
+    const productDelete = await Product.findById(productId).populate([
       {
         path: 'classifies',
-        populate: [
-          {
-            path: 'classify_values'
-          }
-        ]
       }
     ]);
 
-    console.log(productDelete);
+    if (!productDelete) {
+      return false;
+    }
+    const classifyIds = productDelete.classifies.map(
+      classify => classify._id
+    );
     
+    const [productDeleted, productMediaDeleted, classifyDeleted, classifyValueDeleted] = await Promise.all([
+      this.productRepository.destroy(productId, null, false),
+      this.productMediaRepository.destroyByConditions(
+        {
+          product_id: productId
+        },
+        null,
+        false
+      ),
+      this.classifyRepository.destroyByConditions(
+        {
+          product_id: productId
+        },
+        null,
+        false
+      ),
+      this.classifyValueRepository.destroyByConditions(
+        {
+          classify_id: {
+            $in: classifyIds
+          }
+        },
+        null,
+        false
+      )
+    ]);
+
+    return productDelete
 
 
     //1 . Get product and relations collection
@@ -259,9 +283,6 @@ class ProductService {
 
     // 5. Return boolean
     // const productDelete = await Product.findByIdAndDelete(productId);
-    
-
-    return productDelete;
 
   };
 };

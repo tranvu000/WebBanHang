@@ -1,3 +1,4 @@
+import moment from "moment";
 class BaseRepository {
   constructor(model) {
     this.model = model;
@@ -65,9 +66,27 @@ class BaseRepository {
       ));
     }
 
-    const userDeleted = await this.getModel().findByIdAndDelete(id);
+    const deleted = await this.getModel().findByIdAndDelete(id);
 
-    return !!userDeleted;
+    return !!deleted;
+  }
+
+  async destroyByConditions(conditions, authUser, softDelete = true) {
+    if (softDelete) {
+      return !!(await this.getModel().updateMany(
+        conditions,
+        {
+          update_by: authUser?._id || null,
+          delete_at: moment().format("YYYY-MM-DD hh:mm:ss"),
+        },
+        {
+          new: true,
+        }
+      ));
+    }
+    const deleted = await this.getModel().deleteMany(conditions);
+
+    return !!deleted;
   }
 
   async findById(id) {

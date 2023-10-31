@@ -11,7 +11,7 @@ const classifyValueSchema = new mongoose.Schema(
       type: String,
       require: true,
       get: (value) => {
-        return process.env.DOMAIN + '/product/any/classifies/image/' + value
+        return process.env.DOMAIN + value
       }
     },
     classify_id: {

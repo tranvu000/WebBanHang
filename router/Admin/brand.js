@@ -15,7 +15,7 @@ const brandRouter = (app) => {
   router.post('/', storeUpdateBrandValidation, brandController.store);
   router.get('/', indexBrandValidation, brandController.index);
   router.get('/:brandId', brandController.show);
-  router.put('/:brandId', brandController.update);
+  router.put('/:brandId', storeUpdateBrandValidation, brandController.update);
   router.delete('/:brandId', brandController.destroy);
 
   app.use('/brand', router)
