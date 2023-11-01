@@ -12,14 +12,10 @@ class UserController {
     try {
       const data = req.body;
       data.password = hashString("12345678");
-      res
-        .status(201)
-        .json(
-          responseSuccess(
-            await UserController.userService.store(data, req.authUser),
-            201
-          )
-        );
+      res.status(201).json(responseSuccess(
+        await UserController.userService.store(data, req.authUser),
+        201
+      ));
     } catch (e) {
       res.status(500).json(responseError(e, 500));
     }

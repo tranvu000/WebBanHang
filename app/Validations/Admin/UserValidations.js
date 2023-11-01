@@ -4,7 +4,7 @@ import { USERS } from "../../config/constants.js";
 
 export const storeUpdateUserValidator = baseJoiValidator(
   Joi.object({
-    username: Joi.string().max(50).required().messages({
+    username: Joi.string().max(255).required().messages({
       "string.base": "Ho ten phai la chuoi",
       "string.max": "Ho ten nho hon hoac bang {{#limit}} ky tu",
       "any.required": "Ho ten khong duoc de trong",
@@ -37,7 +37,7 @@ export const storeUpdateUserValidator = baseJoiValidator(
     }),
     level: Joi.number()
       .valid(USERS.levels.admin, USERS.levels.user)
-      .default(USERS.levels.user)
+      .default(USERS.levels.admin)
       .messages({
         "number.base": "level phai la number",
         "any.only": "level khong hop le",

@@ -16,7 +16,7 @@ class AuthService {
         },
       ]
     });
-    if (userByName.level !== 1) {
+    if (userByName.level != 1) {
       throw new Error("Level khong chinh xac");
     }
     if (!userByName) {
