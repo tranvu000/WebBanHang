@@ -2,7 +2,7 @@ import { generateJWT, hashString } from "../Common/helpers.js";
 import User from "../Models/User.js";
 
 class AuthService {
-  async login(userEmailPhone, password) {
+  async login (userEmailPhone, password) {
     const userByName = await User.findOne({
       $or: [
         {
@@ -14,9 +14,11 @@ class AuthService {
         {
           username: userEmailPhone,
         },
-      ],
-      level: 1
+      ]
     });
+    if (userByName.level != 1) {
+      throw new Error("Level khong chinh xac");
+    }
     if (!userByName) {
       throw new Error("Tai khoan khong chinh xac");
     }

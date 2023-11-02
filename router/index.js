@@ -5,7 +5,7 @@ import categoryRouter from "./Admin/category.js";
 import brandRouter from "./Admin/brand.js";
 import productRouter from "./Admin/product.js";
 
-const authUserRouter = require("./User/auth.js")
+import authUserRouter from "./User/auth.js";
 
 const router = (app) => {
   adminUserRouter(app);
