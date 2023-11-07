@@ -49,6 +49,25 @@ class UserService {
     return await this.userRepository.update(userId, data, authUser);
   }
 
+  async updateUser(userId, data, authUser) {
+    const userEmaiPhone = await User.findOne({
+      $or: [
+        {
+          email: data.email
+        },
+        {
+          phone: data.phone
+        }
+      ]
+    });
+
+    if (!!userEmaiPhone) {
+      throw new Error("Tai khoan da ton tai")
+    }
+    
+    return await this.userRepository.update(userId, data, authUser);
+  }
+
   async destroy(userId, authUser) {
     const userDeleted = await User.findByIdAndDelete(userId, authUser);
 

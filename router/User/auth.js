@@ -1,18 +1,18 @@
 import express from "express";
-import AuthUserController from "../../app/Controller/User/AuthUserController.js";
+import AuthController from "../../app/Controller/User/AuthController.js";
 import { 
-  loginAuthUserValidator,
-  registerAuthUserValidator
-} from "../../app/Validations/User/AuthUserValidation.js";
+  loginAuthValidator,
+  registerAuthValidator
+} from "../../app/Validations/User/AuthValidation.js";
 
-const authUserRouter = (app) => {
+const authRouter = (app) => {
   const router = express.Router();
-  const authUserController = new AuthUserController();
+  const authController = new AuthController();
 
-  router.post('/register', registerAuthUserValidator, authUserController.register)
-  router.post('/login', loginAuthUserValidator, authUserController.login)
+  router.post('/register', registerAuthValidator, authController.register)
+  router.post('/login', loginAuthValidator, authController.login)
 
-  app.use('/authUser', router)
+  app.use('/auth', router)
 };
 
-export default authUserRouter;
+export default authRouter;

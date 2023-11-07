@@ -2,7 +2,7 @@ import Joi from "joi";
 import { baseJoiValidator } from "../BaseValidation.js";
 import { USERS } from "../../config/constants.js";
 
-export const loginAuthUserValidator = baseJoiValidator (
+export const loginAuthValidator = baseJoiValidator (
   Joi.object({
     userEmailPhone: Joi.string().required().messages({
       "string.base": "Ten dang nhap phai la chuoi",
@@ -16,7 +16,7 @@ export const loginAuthUserValidator = baseJoiValidator (
   })
 );
 
-export const registerAuthUserValidator = baseJoiValidator (
+export const registerAuthValidator = baseJoiValidator (
   Joi.object({
     username: Joi.string().max(255).required().messages({
       "string.base": "Ho va ten phai la chuoi",

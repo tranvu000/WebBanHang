@@ -4,13 +4,13 @@ import {
   loginAuthValidator,
 } from "../../app/Validations/Admin/AuthValidations.js";
 
-const authRouter = (app) => {
+const authAdminRouter = (app) => {
   const router = express.Router();
   const authController = new AuthController();
 
   router.post("/login", loginAuthValidator, authController.login);
 
-  app.use("/auth", router);
+  app.use("/admin/auth", router);
 };
 
-export default authRouter;
+export default authAdminRouter;

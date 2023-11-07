@@ -10,6 +10,13 @@ const categorySchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    image: {
+      type: String,
+      get: (value) => {
+        return process.env.DOMAIN + '/product/category/' + value
+      },
+      default: 'default_category.png',
+    },
     created_by: {
       type: ObjectId
     },
@@ -28,6 +35,10 @@ const categorySchema = new mongoose.Schema(
   },
 
   {
+    toJSON: {
+      getters: true
+    },
+
     timestamps: {
       createdAt: 'created_at',
       updatedAt: 'updated_at'

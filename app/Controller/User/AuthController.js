@@ -1,14 +1,13 @@
-import AuthUserService from "../../Service/User/AuthUserService.js";
+import AuthService from "../../Service/AuthService.js";
 import { responseError, responseSuccess } from "../../Common/helpers.js";
-import { hashString } from "../../Common/helpers.js";
 
-class AuthUserController {
-  static authUserService = new AuthUserService();
+class AuthController {
+  static authService = new AuthService();
   async register (req, res) {
     try {
       // dataUser.password = hashString(dataUser.password);
       res.status(201).json(responseSuccess(
-        await AuthUserController.authUserService.register(
+        await AuthController.authService.register(
           req.body
         ),
         201
@@ -21,7 +20,7 @@ class AuthUserController {
   async login (req, res) {
     try {
       res.status(201).json(responseSuccess(
-        await AuthUserController.authUserService.login(
+        await AuthController.authService.login(
           req.body.userEmailPhone,
           req.body.password
         ),
@@ -33,4 +32,4 @@ class AuthUserController {
   };
 };
 
-export default AuthUserController;
+export default AuthController;
