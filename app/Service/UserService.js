@@ -21,22 +21,23 @@ class UserService {
       ],
     });
 
-    // if(!!userByName) {
-    //   throw new Error("Tai khoan da ton tai");
-    // };
+    if(!!userByName) {
+      throw new Error("Tai khoan da ton tai");
+    };
 
-    // const user = await this.userRepository.create(data, authUser);
+    const user = await this.userRepository.create(data, authUser);
+
     await this.emailService.sendMailWithTemplate(
       data.email,
       "Hello",
-      // 'email_template/confirm_email.ejs',
-      // {
-      //   name: data.name,
-      //   confirmUrl: 'http:localhost:5050/confirm-email'
-      // }
+      'email_template/confirm_email.ejs',
+      {
+        name: data.name,
+        confirmUrl: 'http:localhost:5050/confirm-email'
+      }
     );
 
-    return {};
+    return user;
   }
 
   async index(params) {

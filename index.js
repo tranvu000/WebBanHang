@@ -1,11 +1,8 @@
 import express from "express";
-import dotenv from "dotenv";
 import router from "./router/index.js";
 import mongoose from "mongoose";
 import { MulterError } from "multer";
 import { responseError } from "./app/Common/helpers.js";
-
-dotenv.config();
 
 mongoose
   .connect(process.env.MONGODB_URI, 

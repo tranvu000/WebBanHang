@@ -1,7 +1,11 @@
 import { generateJWT, hashString, parserJWT } from "../Common/helpers.js";
 import User from "../Models/User.js";
-
+import UserRepository from "../Repositories/UserRepository.js";
+import { USERS} from "../config/constants.js"
 class AuthService {
+  constructor() {
+    this.userRepository = new UserRepository();
+  }
   async register (data) {
     const userByName = await User.findOne({
       $or: [
@@ -57,16 +61,37 @@ class AuthService {
     };
   };
 
-  // async confirmAccount (token) {
-  //   const responseToken = parserJWT(token, false);
-  //   console.log(!responseToken.success);
-  //   if (!responseToken.success) {
-  //     throw new Error(responseToken.errors, 401)
-  //   }
+  async confirmAccount (token) {
+    const responseToken = parserJWT(token, false);
 
-  //   const userId = responseToken.payload.id;
-  //   return console.log(1);
-  // }
+    if (!responseToken.success) {
+      throw new Error(responseToken.error, 401)
+    }
+    const userId = responseToken.payload.id;
+    const user = await this.userRepository.findById(userId);
+
+    if (!user) {
+      throw new Error('User không tồn tại.', 401)
+    };
+
+    if (user.is_confirm_account === USERS.is_confirm_account.true) {
+      throw new Error('User đã xác thực tài khoản.', 401);
+    }
+
+    const userUpdated = await this.userRepository.update(
+      userId,
+      {
+        is_confirm_account: USERS.is_confirm_account.true
+      },
+      user
+    );
+
+    return userUpdated;
+  };
+
+  async changePassword (token, password) {
+
+  }
 }
 
 export default AuthService;

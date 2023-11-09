@@ -3,6 +3,10 @@ export const USERS = {
     admin: 1,
     user: 2,
   },
+  is_confirm_account: {
+    true: 1,
+    false: 2,
+  },
   gender: {
     male: 1,
     female: 2,

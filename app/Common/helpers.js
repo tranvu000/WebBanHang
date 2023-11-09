@@ -100,4 +100,42 @@ export const parserJWT = (token) => {
 
     return response;
   }
+};
+
+export const parserJWTToken = (bearerToken, withBearerPrefix = true) => {
+  const responseToken = {
+    success: false,
+  }
+
+  if (!bearerToken) {
+    return {...responseToken, errors: 'Token không được để trống!'};
+  }
+
+  try {
+    let token = [];
+
+    if (withBearerPrefix) {
+      token = bearerToken.split(' ')[1].split('.');
+    } else {
+      token = bearerToken.split('.');
+    }
+    const base64Header = token[0];
+    const base64Payload = token[1];
+    const signature = token[2];
+    const header = JSON.parse(Buffer.from(base64Header, 'base64').toString());
+
+    if (hashHmacString(base64Header + "." + base64Payload, header.alg) !== signature) {
+
+      return {...responseToken, errors: 'Token không đúng định dạng!'};
+    }
+    const payload = JSON.parse(Buffer.from(base64Payload, 'base64').toString());
+
+    if (moment().unix() > payload.exp) {
+      return {...responseToken, errors: 'Token đã hết hạn!'};
+    }
+
+    return {...responseToken, success: true, payload};
+  } catch (e) {
+    return {...responseToken, errors: e.message};
+  }
 }
