@@ -5,6 +5,7 @@ import {
 } from "../../Common/helpers.js";
 import UserService from "../../Service/UserService.js";
 
+
 class UserController {
   static userService = new UserService();
 
@@ -17,6 +18,7 @@ class UserController {
         201
       ));
     } catch (e) {
+      console.log(e);
       res.status(500).json(responseError(e, 500));
     }
   }
