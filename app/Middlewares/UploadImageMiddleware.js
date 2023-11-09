@@ -14,7 +14,7 @@ const storageAvatar = multer.diskStorage({
 
 const storageLogo = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve('./storage/product/brand/logo'))
+    cb(null, path.resolve('./storage/brand/logo'))
   },
 
   filename: (req, file, cb) => {
