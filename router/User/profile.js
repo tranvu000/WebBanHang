@@ -1,7 +1,7 @@
 import express from "express";
 import ProfileController from "../../app/Controller/User/ProfileController.js";
 import authMiddleware from "../../app/Middlewares/AuthMiddleware.js";
-import { uploadAvatarMiddleware } from "../../app/Middlewares/UploadAvatarMiddleware.js";
+import { uploadAvatarMiddleware } from "../../app/Middlewares/UploadImageMiddleware.js";
 
 const profileRouter = (app) => {
   const router = express.Router();

@@ -33,7 +33,7 @@ class ProfileController {
       if (req.file) {
         data.avatar = req.file.filename;
       }
-
+      console.log(data);
       res.status(201).json(responseSuccess(
         await ProfileController.userService.updateUser(
           req.authUser._id,

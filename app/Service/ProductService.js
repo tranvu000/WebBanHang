@@ -289,6 +289,7 @@ class ProductService {
         name: new RegExp (`${keyword}`, 'i')
       }
     };
+
     const searchProduct = await this.productRepository.index(
       conditions,
       limit,
@@ -363,8 +364,31 @@ class ProductService {
     return productList;
   };
 
-  async listProductByCategory (category_id) {
-    const listProducts = await Product.find()
+  async listProductByCategory (params) {
+    let {category_id, limit, page} = params;
+    limit = +limit;
+    page = +page;
+    let conditions = {};
+
+    if(category_id) {
+      conditions = {
+        category_id: `${category_id}`
+      }
+    };
+
+    const listProductByCategory = await this.productRepository.index(
+      conditions,
+      limit,
+      page,
+      [
+        {
+          path: 'productMedia',
+          limit: 1
+        }
+      ]
+    );
+
+    return listProductByCategory;
   }
 
   async details (productId) {

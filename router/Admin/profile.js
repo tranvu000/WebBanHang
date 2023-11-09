@@ -2,7 +2,7 @@ import express from 'express';
 import authMiddleware from '../../app/Middlewares/AuthMiddleware.js';
 import ProfileController from '../../app/Controller/Admin/ProfileController.js';
 import { changePasswordValidator } from '../../app/Validations/Admin/ProfileValidation.js';
-import { uploadAvatarMiddleware } from '../../app/Middlewares/UploadAvatarMiddleware.js';
+import { uploadAvatarMiddleware } from '../../app/Middlewares/UploadImageMiddleware.js';
 
 const profileAdminRouter = (app) => {
   const router = express.Router();

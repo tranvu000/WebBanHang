@@ -15,3 +15,26 @@ export const loginAuthValidator = baseJoiValidator(
   })
 );
 
+export const confirmAccountValidator = baseJoiValidator(
+  Joi.object({
+    token: Joi.string().required().messages({
+      "string.base": "Token phai la chuoi",
+      "any.required": "Token khong duoc de trong",
+    })
+  })
+);
+
+export const changePasswordValidator = baseJoiValidator(
+  Joi.object({
+    token: Joi.string().required().messages({
+      "string.base": "Token phai la chuoi",
+      "any.required": "Token khong duoc de trong",
+    }),
+    password: Joi.string().min(8).required().messages({
+      "string.base": "Password phai la chuoi",
+      "string.min": "Password lon hon hoac bang {{#limit}} ky tu",
+      "any.required": "Password khong duoc de trong",
+    }),
+  })
+);
+

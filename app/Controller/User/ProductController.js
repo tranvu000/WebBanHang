@@ -51,9 +51,7 @@ class ProductController {
   async listProductByCategory (req, res) {
     try {
       res.status(201).json(responseSuccess(
-        await ProductController.productService.listProductByCategory(
-          req.params.category_id
-        ),
+        await ProductController.productService.listProductByCategory(req.query),
         201
       ))
     } catch (e) {

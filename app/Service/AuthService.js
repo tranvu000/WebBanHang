@@ -1,4 +1,4 @@
-import { generateJWT, hashString } from "../Common/helpers.js";
+import { generateJWT, hashString, parserJWT } from "../Common/helpers.js";
 import User from "../Models/User.js";
 
 class AuthService {
@@ -55,7 +55,18 @@ class AuthService {
     return {
       token: generateJWT(userByName),
     };
-  }
+  };
+
+  // async confirmAccount (token) {
+  //   const responseToken = parserJWT(token, false);
+  //   console.log(!responseToken.success);
+  //   if (!responseToken.success) {
+  //     throw new Error(responseToken.errors, 401)
+  //   }
+
+  //   const userId = responseToken.payload.id;
+  //   return console.log(1);
+  // }
 }
 
 export default AuthService;

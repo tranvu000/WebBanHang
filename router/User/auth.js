@@ -11,6 +11,7 @@ const authRouter = (app) => {
 
   router.post('/register', registerAuthValidator, authController.register)
   router.post('/login', loginAuthValidator, authController.login)
+  
 
   app.use('/auth', router)
 };

@@ -46,7 +46,7 @@ export const storeUpdateUserValidator = baseJoiValidator(
       "string.base": "Address phai la chuoi",
     }),
     avatar: Joi.string().optional().messages({
-      "string.base": "Avatar phai la ipg",
+      "string.base": "Avatar phai la jpg",
     }),
   })
 );
