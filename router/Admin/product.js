@@ -4,7 +4,7 @@ import authMiddleware from "../../app/Middlewares/AuthMiddleware.js"
 import { storeUpdateProductAnyMiddleware } from "../../app/Middlewares/StoreUpdateProductAnyMiddleware.js";
 import { indexProductValidator, storeUpdateProductValidator } from "../../app/Validations/Admin/ProductValidation.js";
 
-const productRouter = (app) => {
+const productAdminRouter = (app) => {
   const router = express.Router();
   const productController = new ProductController();
 
@@ -42,7 +42,7 @@ const productRouter = (app) => {
   ]), productController.update);
   router.delete('/:productId', productController.destroy);
 
-  app.use('/product', router)
+  app.use('/admin/product', router)
 };
 
-export default productRouter;
+export default productAdminRouter;

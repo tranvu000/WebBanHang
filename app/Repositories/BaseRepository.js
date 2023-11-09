@@ -15,7 +15,7 @@ class BaseRepository {
     });
   }
 
-  async index(conditions = {}, limit, page, populate = []) {
+  async index(conditions = {}, limit, page, populate = [], select = []) {
     conditions.delete_at = null;
     limit = +limit;
     page = +page;
@@ -24,9 +24,10 @@ class BaseRepository {
       this.getModel().count(conditions),
       this.getModel()
         .find(conditions)
+        .select(select)
         .skip(limit * (page - 1))
         .limit(limit)
-        .populate(populate),
+        .populate(populate)
     ]);
 
     return {

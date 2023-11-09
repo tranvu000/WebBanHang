@@ -16,6 +16,25 @@ class AuthController {
       res.status(500).json(responseError(e, 500));
     }
   };
+
+  // async confirmAccount(req, res) {
+  //   try {
+  //     res.status(201).json(responseSuccess(
+  //       await AuthController.authService.confirmAccount(req.body.token),
+  //       201
+  //     ))
+  //   } catch (e) {
+  //     res.status(500).json(responseError(e, 500));
+  //   }
+  // };
+
+  // async changePassword(req, res) {
+  //   try {
+  //     res.send('ji')
+  //   } catch (e) {
+  //     res.status(500).json(responseError(e, 500))
+  //   }
+  // }
 }
 
 export default AuthController;

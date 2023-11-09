@@ -1,7 +1,9 @@
 import ProductRepository from "../Repositories/ProductRepository.js";
 import ProductMediaRepository from "../Repositories/ProductMediaRepository.js";
 import ClassifyRepository from "../Repositories/ClassifyRepository.js";
-import ClassifyValueRepository from "../Repositories/ClassifyValueRepository.js"
+import ClassifyValueRepository from "../Repositories/ClassifyValueRepository.js";
+import CategoryRepository from "../Repositories/CategoryRepository.js";
+import BrandRepository from "../Repositories/BrandRepository.js"
 import Product from '../Models/Product.js'
 import ProductMedia from "../Models/ProductMedia.js";
 import Classify from "../Models/Classify.js";
@@ -11,6 +13,8 @@ class ProductService {
     this.productMediaRepository = new ProductMediaRepository();
     this.classifyRepository = new ClassifyRepository();
     this.classifyValueRepository = new ClassifyValueRepository();
+    this.categoryRepository = new CategoryRepository();
+    this.brandRepository = new BrandRepository();
   }
   async store(data, authUser) {
     const productData = {
@@ -128,6 +132,7 @@ class ProductService {
 
   async show(productId) {
     const productShow = await Product.findById(productId);
+    
     await productShow.populate([
       {
         path: 'brand',
@@ -271,19 +276,142 @@ class ProductService {
     ]);
 
     return productDelete
+  };
 
+  async searchProduct (params) {
+    let {keyword, limit, page} = params;
+    limit = +limit;
+    page = +page;
+    let conditions = {};
 
-    //1 . Get product and relations collection
+    if(keyword) {
+      conditions = {
+        name: new RegExp (`${keyword}`, 'i')
+      }
+    };
 
-    //2. Delete product
+    const searchProduct = await this.productRepository.index(
+      conditions,
+      limit,
+      page,
+      [
+        {
+          path: 'productMedia',
+          limit: 1
+        },
+      ],
+    );
 
-    //3. Delete Media
+    return searchProduct;
+  };
 
-    //4. Delete Classifies
+  async searchBrand (params) {
+    let {keyword, limit, page} = params;
+    limit = +limit;
+    page = +page;
+    let conditions = {};
 
-    // 5. Return boolean
-    // const productDelete = await Product.findByIdAndDelete(productId);
+    if(keyword) {
+      conditions = {
+        name: new RegExp (`${keyword}`, 'i')
+      }
+    };
 
+    const searchBrand = await this.brandRepository.index(
+      conditions,
+      limit,
+      page,
+    );
+
+    return searchBrand;
+  };
+
+  async listCategory (params) {
+    let {limit, page} = params;
+    limit = +limit;
+    page = +page;
+    let conditions = {};
+
+    const productCategory = await this.categoryRepository.index(
+      conditions,
+      limit,
+      page,
+      [],
+      ['image', 'name']
+    );
+
+    return productCategory;
+  };
+
+  async listProduct (params) {
+    let {limit, page} = params;
+    limit = +limit;
+    page = +page;
+    let conditions = {};
+
+    const productList = await this.productRepository.index(
+      conditions,
+      limit,
+      page,
+      [
+        {
+          path: 'productMedia',
+          limit: 1
+        },
+      ]
+    );
+
+    return productList;
+  };
+
+  async listProductByCategory (params) {
+    let {category_id, limit, page} = params;
+    limit = +limit;
+    page = +page;
+    let conditions = {};
+
+    if(category_id) {
+      conditions = {
+        category_id: `${category_id}`
+      }
+    };
+
+    const listProductByCategory = await this.productRepository.index(
+      conditions,
+      limit,
+      page,
+      [
+        {
+          path: 'productMedia',
+          limit: 1
+        }
+      ]
+    );
+
+    return listProductByCategory;
+  }
+
+  async details (productId) {
+    const productdetails = await Product.findById(productId);
+
+    await productdetails.populate([
+      {
+        path: 'category'
+      },
+      {
+        path: 'productMedia'
+      },
+      {
+        path: 'classifies',
+        populate: [
+          {
+            path: 'classify_values'
+          }
+        ]
+      }
+    ]);
+
+    return productdetails;
   };
 };
 

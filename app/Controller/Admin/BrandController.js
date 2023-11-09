@@ -6,8 +6,13 @@ class BrandController {
 
   async store (req, res) {
     try {
+      const data = req.body;
+      if (req.file) {
+        data.logo = req.file.filename;
+      }
+
       res.status(201).json(responseSuccess(
-        await BrandController.brandService.store(req.body, req.authUser),
+        await BrandController.brandService.store(data, req.authUser),
         201
       ))
     } catch (e) {
@@ -38,10 +43,15 @@ class BrandController {
 
   async update (req, res) {
     try {
+      const data = req.body;
+
+      if (req.file) {
+        data.logo = req.file.filename;
+      }
       res.status(201).json(responseSuccess(
         await BrandController.brandService.update(
           req.params.brandId,
-          req.body,
+          data,
           req.authUser
         ),
         201

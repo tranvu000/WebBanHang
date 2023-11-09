@@ -1,13 +1,39 @@
-import UserRepository from "../Repositories/UserRepository.js";
 import User from "../Models/User.js";
+import EmailService from "./EmailService.js";
+import UserRepository from "../Repositories/UserRepository.js";
 
 class UserService {
   constructor() {
+    this.emailService = new EmailService();
     this.userRepository = new UserRepository();
   }
 
   async store(data, authUser) {
+    const userByName = await User.findOne({
+      $or: [
+        {
+          email: data.email
+        },
+        {
+          phone: data.phone
+        }
+      ],
+    });
+
+    if(!!userByName) {
+      throw new Error("Tai khoan da ton tai");
+    };
+
     const user = await this.userRepository.create(data, authUser);
+    this.emailService.sendMailWithTemplate(
+      data.email,
+      "Hello",
+      'email_template/confirm_email.ejs',
+      {
+        name: data.name,
+        confirmUrl: 'http:localhost:3000/confirm-email'
+      }
+    );
 
     return user;
   }
@@ -46,6 +72,25 @@ class UserService {
   }
 
   async update(userId, data, authUser) {
+    return await this.userRepository.update(userId, data, authUser);
+  }
+
+  async updateUser(userId, data, authUser) {
+    const userEmaiPhone = await User.findOne({
+      $or: [
+        {
+          email: data.email
+        },
+        {
+          phone: data.phone
+        }
+      ]
+    });
+
+    if (!!userEmaiPhone) {
+      throw new Error("Tai khoan da ton tai")
+    }
+    
     return await this.userRepository.update(userId, data, authUser);
   }
 
