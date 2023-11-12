@@ -19,9 +19,11 @@ class AuthController {
 
   async login (req, res) {
     try {
+      const level = 2
       res.status(201).json(responseSuccess(
         await AuthController.authService.login(
           req.body.userEmailPhone,
+          level,
           req.body.password
         ),
         201

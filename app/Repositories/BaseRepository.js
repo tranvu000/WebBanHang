@@ -91,7 +91,11 @@ class BaseRepository {
   }
 
   async findById(id) {
-    return {};
+    return this.getModel().findOne({
+      _id: id,
+      deleted_at: null
+    });
+    // return {};
   }
   async createMultiple(data) {
     return this.getModel().create(data);

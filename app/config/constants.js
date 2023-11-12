@@ -1,5 +1,6 @@
 export const USERS = {
   levels: {
+    super_admin: 1,
     admin: 1,
     user: 2,
   },

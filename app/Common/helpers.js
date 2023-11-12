@@ -124,7 +124,7 @@ export const parserJWTToken = (bearerToken, withBearerPrefix = true) => {
     const signature = token[2];
     const header = JSON.parse(Buffer.from(base64Header, 'base64').toString());
 
-    if (hashHmacString(base64Header + "." + base64Payload, header.alg) !== signature) {
+    if (hashString(base64Header + "." + base64Payload, header.alg) !== signature) {
 
       return {...responseToken, errors: 'Token không đúng định dạng!'};
     }

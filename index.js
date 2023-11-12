@@ -1,17 +1,10 @@
 import express from "express";
 import router from "./router/index.js";
-import mongoose from "mongoose";
 import { MulterError } from "multer";
 import { responseError } from "./app/Common/helpers.js";
+import mongoDbConnect from "./database/mongodb.js";
 
-mongoose
-  .connect(process.env.MONGODB_URI, 
-    {
-    autoIndex: true,
-    }
-  ).then(() => {
-    console.log("Connected");
-  });
+mongoDbConnect();
 
 const app = express();
 
