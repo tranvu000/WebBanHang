@@ -1,17 +1,20 @@
-import mongoose from 'mongoose';
-import { ObjectId } from 'mongodb';
+import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
-const shoppingCartsSchema = new mongoose.Schema(
+const orderDetailsSchema = new mongoose.Schema(
   {
-    user_id: {
+    order_id: {
       type: ObjectId,
       required: true,
-      ref: 'User'
+      ref: 'Order'
     },
     product_id: {
       type: ObjectId,
       required: true,
       ref: 'Product'
+    },
+    note: {
+      type: String
     },
     quantity: {
       type: Number,
@@ -52,16 +55,16 @@ const shoppingCartsSchema = new mongoose.Schema(
   }
 );
 
-shoppingCartsSchema.virtual('user', {
-  ref: 'User',
+orderDetailsSchema.virtual('order', {
+  ref: 'Order',
   foreignField: '_id',
-  localField: 'user_id'
+  localField: 'order_id'
 });
 
-shoppingCartsSchema.virtual('product', {
+orderDetailsSchema.virtual('product', {
   ref: 'Product',
   foreignField: '_id',
   localField: 'product_id'
 });
 
-export default mongoose.model('ShoppingCarts', shoppingCartsSchema, 'shoppingCarts');
+export default mongoose.model('OrderDetails', orderDetailsSchema, 'orderDetails')

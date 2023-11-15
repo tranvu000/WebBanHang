@@ -20,16 +20,11 @@ class ShoppingCartsService {
         select: {'discount': 0},
         populate: [
           {
-            path: 'productMedia',
-            limit: 1
-          },
-          {
             path: 'classifies',
             select: {'description': 0},
             populate: [
               {
-                path: 'classify_values',
-                select: {'image': 0}
+                path: 'classify_values'
               }
             ]
           }

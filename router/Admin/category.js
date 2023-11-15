@@ -18,7 +18,7 @@ const categoryRouter = (app) => {
   router.put('/:categoryId', storeUpdateCategoryValidation, categoryController.update);
   router.delete('/:categoryId', categoryController.destroy);
 
-  app.use('/category', router);
+  app.use('/admin/category', router);
 };
 
 export default categoryRouter;

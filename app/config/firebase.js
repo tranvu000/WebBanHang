@@ -3,11 +3,9 @@ import path from 'path';
 
 admin.initializeApp({
     credential: admin.credential.cert(path.resolve('./webbanhang-firebase.json')),
-
-    storageBucket: 'webbanhang-1bf46.appspot.com',
+    storageBucket: 'webbanhang-1bf46.appspot.com'
 });
-
-const bucket = admin.storage().bucket('admin');
+const bucket = admin.storage().bucket();
 
 export default {
     bucket

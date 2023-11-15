@@ -8,7 +8,7 @@ class ProductController {
     try {
       const data = req.body;
       data.images = [];
-
+      
       for(let file of req.files) {
         if (file.fieldname === "images") {
           data.images.push('/product/any/images/' + file.filename)

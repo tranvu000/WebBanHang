@@ -20,3 +20,10 @@ export const PRODUCT = {
     video: 2,
   }
 };
+
+export const ORDER = {
+  ststus: {
+    paid: 1,
+    unpaid: 2
+  }
+}

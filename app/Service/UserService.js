@@ -71,11 +71,11 @@ class UserService {
     const user = await User.findById(userId);
     
     return user;
-  }
+  };
 
   async update(userId, data, authUser) {
     return await this.userRepository.update(userId, data, authUser);
-  }
+  };
 
   async updateUser(userId, data, authUser) {
     const userEmaiPhone = await User.findOne({
@@ -94,7 +94,7 @@ class UserService {
     }
     
     return await this.userRepository.update(userId, data, authUser);
-  }
+  };
 
   async destroy(userId, authUser) {
     const userDeleted = await User.findByIdAndDelete(userId, authUser);

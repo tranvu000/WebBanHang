@@ -19,7 +19,7 @@ const brandRouter = (app) => {
   router.put('/:brandId', uploadLogoMiddleware.single('logo'),storeUpdateBrandValidation, brandController.update);
   router.delete('/:brandId', brandController.destroy);
 
-  app.use('/brand', router)
+  app.use('/admin/brand', router)
 };
 
 export default brandRouter;
