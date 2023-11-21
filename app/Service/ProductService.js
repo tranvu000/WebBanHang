@@ -19,6 +19,7 @@ class ProductService {
   async store(data, authUser) {
     const productData = {
       name: data.name,
+      description: data.description,
       price: data.price,
       discount: data.discount,
       category_id: data.category_id,
@@ -32,7 +33,7 @@ class ProductService {
       productMediaData.push({
           product_id: product._id,
           url: el,
-          type: 1
+          type: 0
       })
     })
 
@@ -40,7 +41,7 @@ class ProductService {
       productMediaData.push({
         product_id: product._id,
         url: data.video,
-        type: 2
+        type: 1
       })
     }
     const productMedia = await this.productMediaRepository.createMultiple(productMediaData);
@@ -70,7 +71,7 @@ class ProductService {
     return await product.populate([
       {
         path: 'brand',
-        select: ['_id', "name"]
+        select: ['_id', 'name']
       },
       {
         path: 'category'
@@ -90,7 +91,7 @@ class ProductService {
   };
 
   async index(params) {
-    let { name, limit = 10, page = 1 } = params;
+    let { name, limit = 40, page = 1 } = params;
     limit = +limit;
     page = +page;
     let conditions = {};
@@ -175,7 +176,7 @@ class ProductService {
       productMediaData.push({
           product_id: product._id,
           url: el,
-          type: 1
+          type: 0
       })
     })
 
@@ -183,7 +184,7 @@ class ProductService {
       productMediaData.push({
         product_id: product._id,
         url: data.video,
-        type: 2
+        type: 1
       })
     };
     

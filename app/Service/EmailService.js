@@ -3,27 +3,28 @@ import path from 'path';
 import { renderFile } from "ejs";
 
 class EmailService {
-  static transporter = createTransport({
-    host: process.env.MAIL_HOST,
-    port: process.env.MAIL_PORT,
-    auth: {
-      user: process.env.MAIL_USER,
-      pass: process.env.MAIL_PASSWORD
-    }
-  })
+  constructor() {
+    this.transporter = createTransport({
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD
+      }
+    });
+  }
 
   async sendMailWithTemplate(
     receiver,
     subject,
-    // template,
-    // templateParams
+    template,
+    templateParams
   ) {
-    EmailService.transporter.sendMail({
+    this.transporter.sendMail({
       from: "tranvietvu0218@gmail.com", 
-      to: "viettoan290696@gmail.com",
-      subject: 'test1', 
-      // html: await renderFile(path.resolve('./views/' + template), templateParams)
-      text: 'hi'
+      to: receiver,
+      subject, 
+      html: await renderFile(path.resolve('./views/' + template), templateParams)
     })
   }
 };

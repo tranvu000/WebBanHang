@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
+import firebase from "../config/firebase.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -21,7 +22,7 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: Number,
-      default: 1,
+      default: 0,
     },
     birthday: {
       type: Date,
@@ -29,16 +30,13 @@ const userSchema = new mongoose.Schema(
     level: {
       type: Number,
       required: true,
-      default: 1,
+      default: 0,
     },
     address: {
       type: String,
     },
     avatar: {
       type: String,
-      get: (value) => {
-        return process.env.DOMAIN + '/user/avatar/' + value;
-      },
       default:"default_avatar.png",
     },
     created_by: {
@@ -63,6 +61,11 @@ const userSchema = new mongoose.Schema(
   {
     toJSON: {
       getters: true,
+      virtuals: true,
+    },
+    toObject: {
+      getters: true,
+      virtuals: true,
     },
     timestamps: {
       createdAt: "created_at",
@@ -70,5 +73,18 @@ const userSchema = new mongoose.Schema(
     },
   }
 );
+// userSchema.virtual('_avatar').get(async function () {
+//   return await this.getAvatarFromFirebase();
+// });
+// userSchema.method('getAvatarFromFirebase', async function (cb) {
+//   const blob = firebase.bucket.file(this.avatar);
+//   const options = {
+//     version: 'v2',
+//     action: 'read',
+//     expires: Date.now() + 1000 * 60 * 60
+//   };
+//   const url = await blob.getSignedUrl(options);
+//   return url[0];
+// });
 
 export default mongoose.model("User", userSchema, "users");

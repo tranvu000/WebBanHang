@@ -8,6 +8,10 @@ export const storeUpdateProductValidator = baseJoiValidator(
       "string.max": "Ten san pham nho hon hoac bang {{#limit}} ky tu",
       "any.required": "Ten san pham khong duoc de trong",
     }),
+    description: Joi.string().max(1000).messages({
+      "string.base": "Mo ta phai la chuoi",
+      "string.max": "Mo ta nho hon hoac bang {{#limit}} ky tu",
+    }),
     price: Joi.number().required().messages({
       "number.base": "Gia phai la number",
       "any.required": "Gia khong duoc de trong",

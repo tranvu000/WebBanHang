@@ -36,8 +36,8 @@ class CategoryService {
     return await this.categoryRepository.update(categoryId, data, authUser)
   }
 
-  async destroy(categoryId) {
-    const categoryDelete = await Category.findByIdAndDelete(categoryId);
+  async destroy(categoryId, authUser) {
+    const categoryDelete = await this.categoryRepository.destroy(categoryId, authUser, false);
 
     return categoryDelete;
   }

@@ -56,7 +56,8 @@ class CategoryController {
     try {
       res.status(201).json(responseSuccess(
         !!await CategoryController.categoryService.destroy(
-          req.params.categoryId
+          req.params.categoryId,
+          req.authUser
         ),
         201
       ))

@@ -37,10 +37,10 @@ class BrandService {
     return await this.brandRepository.update(brandId, data, authUser)
   };
 
-  async destroy (brandId) {
-    const brandDelete = await Brand.findByIdAndDelete(brandId);
+  async destroy (brandId, authUser) {
+    const brandDelete = await this.brandRepository.destroy(brandId, authUser, true);
 
-    return brandDelete
+    return brandDelete;
   };
 };
 

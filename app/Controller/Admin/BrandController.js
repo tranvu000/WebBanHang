@@ -64,7 +64,10 @@ class BrandController {
   async destroy (req, res) {
     try {
       res.status(201).json(responseSuccess(
-        !!await BrandController.brandService.destroy(req.params.brandId),
+        !!await BrandController.brandService.destroy(
+          req.params.brandId,
+          req.authUser
+        ),
         201
       ))
     } catch (e) {

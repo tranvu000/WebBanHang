@@ -1,6 +1,4 @@
 import multer from "multer";
-import path from "path";
-import moment from "moment";
 
 const fileFilter = (req, file, cb) => {
   const allowMimes = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -12,8 +10,8 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
-export const uploadFileMiddleware = multer({
-  storage: multer.memoryStorage(), //lưu tạm vào bộ nhớ
+const uploadFileMiddleware = multer({
+  storage: multer.memoryStorage(),
 
   limit: {
     fileSize: 250000
@@ -22,13 +20,4 @@ export const uploadFileMiddleware = multer({
   fileFilter
 });
 
-// import multer from 'multer';
-
-// const uploadAvatarS3 = multer({
-//     storage: multer.memoryStorage(),
-//     limits: {
-//         fileSize: 5 * 1024 * 1024, // limit file size to 5MB
-//     },
-// });
-
-// export default uploadAvatarS3;
+export default uploadFileMiddleware;

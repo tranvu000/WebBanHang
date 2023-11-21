@@ -2,6 +2,7 @@ import User from "../Models/User.js";
 import EmailService from "./EmailService.js";
 import UserRepository from "../Repositories/UserRepository.js";
 import { createTransport } from "nodemailer";
+import { generateUrlFromFirebase } from "../Common/helpers.js";
 
 class UserService {
   constructor() {
@@ -21,22 +22,23 @@ class UserService {
       ],
     });
 
-    // if(!!userByName) {
-    //   throw new Error("Tai khoan da ton tai");
-    // };
+    if(!!userByName) {
+      throw new Error("Tai khoan da ton tai");
+    };
 
-    // const user = await this.userRepository.create(data, authUser);
+    const user = await this.userRepository.create(data, authUser);
+
     await this.emailService.sendMailWithTemplate(
       data.email,
-      "Hello",
-      // 'email_template/confirm_email.ejs',
-      // {
-      //   name: data.name,
-      //   confirmUrl: 'http:localhost:5050/confirm-email'
-      // }
+      "Tao tai khoan User",
+      'email_template/confirm_email.ejs',
+      {
+        name: data.name,
+        confirmUrl: 'http:localhost:5050/confirm-email'
+      }
     );
 
-    return {};
+    return user;
   }
 
   async index(params) {
@@ -67,14 +69,19 @@ class UserService {
   }
 
   async show(userId) {
-    const user = await User.findById(userId);
+    let user = await User.findById(userId);
+    user = user.toObject();
+
+    if (user.avatar) {
+      user.avatar = await generateUrlFromFirebase(user.avatar);
+    }
     
     return user;
-  }
+  };
 
   async update(userId, data, authUser) {
     return await this.userRepository.update(userId, data, authUser);
-  }
+  };
 
   async updateUser(userId, data, authUser) {
     const userEmaiPhone = await User.findOne({
@@ -91,9 +98,12 @@ class UserService {
     if (!!userEmaiPhone) {
       throw new Error("Tai khoan da ton tai")
     }
-    
-    return await this.userRepository.update(userId, data, authUser);
-  }
+    if (data.avatar) {
+      data.avatar = await generateUrlFromFirebase(data.avatar);
+    }
+    const result = await this.userRepository.update(userId, data, authUser);
+    return result;
+  };
 
   async destroy(userId, authUser) {
     const userDeleted = await User.findByIdAndDelete(userId, authUser);
