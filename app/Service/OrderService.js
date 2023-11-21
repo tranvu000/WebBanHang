@@ -5,13 +5,14 @@ import Product from "../Models/Product.js";
 import ProductRepository from "../Repositories/ProductRepository.js";
 import Order from "../Models/Order.js";
 import OrderDetails from "../Models/OrderDetails.js";
+import OrderDetailClassifyValuesRepository from "../Repositories/OrderDetailClassifyValuesRepository.js"
 
 class OrderService {
   constructor() {
     this.orderRepository = new OrderRepository();
     this.orderDetailsRepository = new OrderDetailsRepository();
     this.productRepository = new ProductRepository();
-
+    this.orderDetailClassifyValuesRepository = new OrderDetailClassifyValuesRepository();
   };
 
   async createOrder (data, authUser) {
@@ -41,6 +42,7 @@ class OrderService {
         total_price:totalPrice,
       })
     });
+
     const orderData = {
       user_id: data.user_id,
       note: data.note,
@@ -54,8 +56,20 @@ class OrderService {
         orderDatail.order_id = order._id
       }  
     )
-    await this.orderDetailsRepository.createMultiple(orderDetailsData)
-  
+    const orderDatails = await this.orderDetailsRepository.createMultiple(orderDetailsData);
+
+    const orderDetailClassifyValueData = [];
+    data.order_details.forEach((el, index) => {
+      el.orderDetailClassifyValues.forEach(item => {
+        orderDetailClassifyValueData.push({
+          orderDatail_id: orderDatails[index]._id,
+          classifyValue_id: item.classifyValue_id
+        })
+      })
+    });
+    
+    await this.orderDetailClassifyValuesRepository.createMultiple(orderDetailClassifyValueData)
+    
     return await order.populate([
       {
         path: 'order_details',
@@ -63,15 +77,12 @@ class OrderService {
           {
             path: 'product',
             select: 'name',
+          },
+          {
+            path: 'orderDetailClassifyValues',
             populate: [
               {
-                path: 'classifies',
-                select: 'null',
-                populate: [
-                  {
-                    path: 'classify_values'
-                  }
-                ]
+                path: 'classify_values'
               }
             ]
           }
@@ -124,15 +135,12 @@ class OrderService {
               path: 'product',
               select: 'name',
               match: conditions,
+            },
+            {
+              path: 'orderDetailClassifyValues',
               populate: [
                 {
-                  path: 'classifies',
-                  select: 'null',
-                  populate: [
-                    {
-                      path: 'classify_values'
-                    }
-                  ]
+                  path: 'classify_values'
                 }
               ]
             }
@@ -142,7 +150,35 @@ class OrderService {
     );
 
     return orders;
-  }
+  };
+
+  async update (orderId, data, authUser) {
+    const order = await this.orderRepository.update(
+      orderId,
+      data,
+      authUser
+    );
+    
+    return await order.populate([
+      {
+        path: 'order_details',
+        populate: [
+          {
+            path: 'product',
+            select: 'name',
+          },
+          {
+            path: 'orderDetailClassifyValues',
+            populate: [
+              {
+                path: 'classify_values'
+              }
+            ]
+          }
+        ]
+      }
+    ]);
+  };
 };
 
 export default OrderService;

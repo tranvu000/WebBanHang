@@ -31,7 +31,10 @@ class OrderController {
   async list(req, res) {
     try {
       res.status(201).json(responseSuccess(
-        await OrderController.orderService.list(req.query)
+        await OrderController.orderService.list(
+          req.query
+        ),
+        201
       ))
     } catch (e) {
       res.status(500).json(responseError(e, 500))
@@ -40,9 +43,14 @@ class OrderController {
 
   async update(req, res) {
     try {
-      // res.status(201).json(responseSuccess(
-      //   await 
-      // ))
+      res.status(201).json(responseSuccess(
+        await OrderController.orderService.update(
+          req.params.orderId,
+          req.body,
+          req.authUser
+        ),
+        201
+      ))
     } catch (e) {
       res.status(500).json(responseError(e, 500))
     }

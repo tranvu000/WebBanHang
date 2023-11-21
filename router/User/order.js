@@ -9,7 +9,7 @@ const orderRouter = (app) => {
   router.use(authMiddleware);
 
   router.post('/', orderController.createOrder);
-  router.get('/', orderController.list);
+  router.get('/list', orderController.list);
   router.put('/:orderId', orderController.update)
 
   app.use('/order', router);

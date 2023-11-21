@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 
 const orderDetailClassifyValuesSchema = new mongoose.Schema(
   {
-    orderDetail_id: {
+    orderDatail_id: {
       type: ObjectId,
       required: true,
       ref: 'OrderDetail'

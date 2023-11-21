@@ -73,9 +73,9 @@ orderDetailsSchema.virtual('product', {
 
 orderDetailsSchema.virtual('orderDetailClassifyValues', {
   ref: 'OrderDetailClassifyValues',
-  foreignField: '_id',
-  localField: 'orderDetail_id',
-  justOne: true,
+  foreignField: 'orderDatail_id',
+  localField: '_id',
+  // justOne: true,
 });
 
 export default mongoose.model('OrderDetails', orderDetailsSchema, 'orderDetails')
