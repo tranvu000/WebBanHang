@@ -9,7 +9,7 @@ class AuthController {
   static authService = new AuthService();
   async login(req, res) {
     try {
-      const level = 1;
+      const level = 0;
       res
         .status(201)
         .json(

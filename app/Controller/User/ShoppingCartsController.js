@@ -6,13 +6,12 @@ class ShoppingCartsController {
 
   async store (req, res) {
     try {
-      const data = req.body;
-      
       if (!req.authUser) {
         throw new Error('User khong ton tai')
-      } else {
-        data.user_id = req.authUser._id
-      };
+      }
+      
+      const data = req.body;
+      data.user_id = req.authUser._id;
 
       res.status(201).json(responseSuccess(
         await ShoppingCartsController.shoppingCartsService.store(
@@ -26,11 +25,11 @@ class ShoppingCartsController {
     }
   };
 
-  async show (req, res) {
+  async list (req, res) {
     try {
       res.status(201).json(responseSuccess(
-        await ShoppingCartsController.shoppingCartsService.show(
-          req.params.shoppingCartsId
+        await ShoppingCartsController.shoppingCartsService.list(
+          req.authUser._id
         ),
         201
       ))
@@ -39,11 +38,26 @@ class ShoppingCartsController {
     }
   };
 
+  async update (req, res) {
+    try {
+      res.status(201).json(responseSuccess(
+        await ShoppingCartsController.shoppingCartsService.update(
+          req.params.shoppingCartId,
+          req.body,
+          req.authUser
+        ),
+        201
+      ))
+    } catch (e) {
+      res.status(500).json(responseError(e, 500))
+    }
+  }
+
   async destroy (req, res) {
     try {
       res.status(201).json(responseSuccess(
         !!await ShoppingCartsController.shoppingCartsService.destroy(
-          req.params.shoppingCartsId,
+          req.params.shoppingCartId,
           req.authUser
         ),
         201

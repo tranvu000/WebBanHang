@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import moment from "moment";
 import { Buffer } from "node:buffer";
+import firebase from "../config/firebase.js";
 
 export const responseSuccess = (data, status = 200, message = "") => {
   return {
@@ -138,4 +139,27 @@ export const parserJWTToken = (bearerToken, withBearerPrefix = true) => {
   } catch (e) {
     return {...responseToken, errors: e.message};
   }
+};
+
+export const generateVerifyCode = (numberOfDigits) => {
+  const n = parseInt(numberOfDigits);
+  const number = Math.ceil(Math.random() * Math.pow(10, n));
+  let numberString = number.toString();
+  const l = numberString.length;
+
+  // for (let i = 0; i < 6)
+
 }
+
+export const generateUrlFromFirebase = async (path) => {
+  const blob = firebase.bucket.file(path);
+  const options = {
+    version: 'v2',
+    action: 'read',
+    expires: Date.now() + 1000 * 60 * 60
+  };
+  const url = await blob.getSignedUrl(options);
+  
+  return url[0];
+}
+

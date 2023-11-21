@@ -1,29 +1,30 @@
 export const USERS = {
   levels: {
-    super_admin: 1,
-    admin: 1,
-    user: 2,
+    admin: 0,
+    user: 1,
   },
   is_confirm_account: {
-    true: 1,
-    false: 2,
+    true: 0,
+    false: 1,
   },
   gender: {
-    male: 1,
-    female: 2,
+    male: 0,
+    female: 1,
   },
 };
 
 export const PRODUCT = {
   type: {
-    images: 1,
-    video: 2,
+    images: 0,
+    video: 1,
   }
 };
 
-export const ORDER = {
-  ststus: {
-    paid: 1,
-    unpaid: 2
-  }
+export const ORDER_STATUS = {
+  pay: 0,
+  ship: 1,
+  receive: 2,
+  completed: 3,
+  cancelled: 4,
+  refund: 5
 }

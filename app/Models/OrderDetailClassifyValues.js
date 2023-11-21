@@ -1,32 +1,17 @@
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
-import { ORDER_STATUS } from "../config/constants.js";
 
-const orderSchema = new mongoose.Schema(
+const orderDetailClassifyValuesSchema = new mongoose.Schema(
   {
-    user_id: {
+    orderDetail_id: {
       type: ObjectId,
       required: true,
-      ref: 'User'
+      ref: 'OrderDetail'
     },
-    // note: {
-    //   type: String,
-    // },
-    total_price: {
-      type: Number,
-      require: true,
-      default: 0
-    },
-    total_product: {
-      type: Number,
-      require: true,
-      default: 0
-    },
-    status: {
-      type: Number,
-      enum: Object.values(ORDER_STATUS),
+    classifyValue_id: {
+      type: ObjectId,
       required: true,
-      default: 0
+      ref: 'ClassifyValue'
     },
     created_by: {
       type: ObjectId,
@@ -63,16 +48,10 @@ const orderSchema = new mongoose.Schema(
   }
 );
 
-orderSchema.virtual('user', {
-  ref: 'User',
+orderDetailClassifyValuesSchema.virtual('classify_values', {
+  ref: 'ClassifyValue',
   foreignField: '_id',
-  localField: 'user_id'
+  localField: 'classifyValue_id'
 });
 
-orderSchema.virtual('order_details', {
-  ref: 'OrderDetails',
-  localField: '_id',
-  foreignField: 'order_id'
-});
-
-export default mongoose.model('Order', orderSchema, 'order');
+export default mongoose.model('OrderDetailClassifyValues', orderDetailClassifyValuesSchema, 'orderDetailClassifyValues')

@@ -2,6 +2,7 @@ import User from "../Models/User.js";
 import EmailService from "./EmailService.js";
 import UserRepository from "../Repositories/UserRepository.js";
 import { createTransport } from "nodemailer";
+import { generateUrlFromFirebase } from "../Common/helpers.js";
 
 class UserService {
   constructor() {
@@ -29,7 +30,7 @@ class UserService {
 
     await this.emailService.sendMailWithTemplate(
       data.email,
-      "Hello",
+      "Tao tai khoan User",
       'email_template/confirm_email.ejs',
       {
         name: data.name,
@@ -68,7 +69,12 @@ class UserService {
   }
 
   async show(userId) {
-    const user = await User.findById(userId);
+    let user = await User.findById(userId);
+    user = user.toObject();
+
+    if (user.avatar) {
+      user.avatar = await generateUrlFromFirebase(user.avatar);
+    }
     
     return user;
   };
@@ -92,8 +98,11 @@ class UserService {
     if (!!userEmaiPhone) {
       throw new Error("Tai khoan da ton tai")
     }
-    
-    return await this.userRepository.update(userId, data, authUser);
+    if (data.avatar) {
+      data.avatar = await generateUrlFromFirebase(data.avatar);
+    }
+    const result = await this.userRepository.update(userId, data, authUser);
+    return result;
   };
 
   async destroy(userId, authUser) {

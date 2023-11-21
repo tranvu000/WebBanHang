@@ -88,18 +88,22 @@ class BaseRepository {
     const deleted = await this.getModel().deleteMany(conditions);
 
     return !!deleted;
-  }
+  };
 
   async findById(id) {
     return this.getModel().findOne({
       _id: id,
       deleted_at: null
     });
-    // return {};
-  }
+  };
+
+  async getByConditions(conditions, populate = []) {
+    return await this.getModel().find(conditions).populate(populate);
+  };
+
   async createMultiple(data) {
     return this.getModel().create(data);
-  }
+  };
 }
 
 export default BaseRepository;

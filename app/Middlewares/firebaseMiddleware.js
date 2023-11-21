@@ -6,7 +6,8 @@ const firebaseMiddleware = async (req, res, next) => {
   if (!req.file) {
     return res.status(400).send("Error: No files found")
   };
-  const blob = firebase.bucket.file('user/avatar/' + moment().unix() + '-' + req.file.originalname);
+  const fileName = 'user/avatar/' + moment().unix() + '-' + req.file.originalname;
+  const blob = firebase.bucket.file(fileName);
   const blobWriter = blob.createWriteStream({
     metadata: {
       contentType: req.file.mimetype
@@ -18,17 +19,12 @@ const firebaseMiddleware = async (req, res, next) => {
   });
 
   blobWriter.on('finish', async() => {
-    const options = {
-      version: 'v2',
-      action: 'read',
-      expires: Date.now() + 1000 * 60 * 60
-    };
-    res.status(200).send(await blob.getSignedUrl(options))
+    req.body.avatar = fileName;
+    next();
   });
 
   blobWriter.end(req.file.buffer);
 
-  next();
 };
 
 export default firebaseMiddleware;

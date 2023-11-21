@@ -9,8 +9,8 @@ const authRouter = (app) => {
   const router = express.Router();
   const authController = new AuthController();
 
-  router.post('/register', registerAuthValidator, authController.register)
-  router.post('/login', loginAuthValidator, authController.login)
+  router.post('/register', registerAuthValidator, authController.register);
+  router.post('/login', loginAuthValidator, authController.login);
   
 
   app.use('/auth', router)

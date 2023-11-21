@@ -13,11 +13,20 @@ const orderDetailsSchema = new mongoose.Schema(
       required: true,
       ref: 'Product'
     },
-    note: {
-      type: String
+    // note: {
+    //   type: String
+    // },
+    price: {
+      type: Number,
+      default: 0
     },
     quantity: {
       type: Number,
+      default: 1
+    },
+    total_price: {
+      type: Number,
+      required: true,
       default: 0
     },
     created_by: {
@@ -55,16 +64,18 @@ const orderDetailsSchema = new mongoose.Schema(
   }
 );
 
-orderDetailsSchema.virtual('order', {
-  ref: 'Order',
-  foreignField: '_id',
-  localField: 'order_id'
-});
-
 orderDetailsSchema.virtual('product', {
   ref: 'Product',
   foreignField: '_id',
-  localField: 'product_id'
+  localField: 'product_id',
+  justOne: true,
+});
+
+orderDetailsSchema.virtual('orderDetailClassifyValues', {
+  ref: 'OrderDetailClassifyValues',
+  foreignField: '_id',
+  localField: 'orderDetail_id',
+  justOne: true,
 });
 
 export default mongoose.model('OrderDetails', orderDetailsSchema, 'orderDetails')

@@ -33,7 +33,7 @@ class ProductService {
       productMediaData.push({
           product_id: product._id,
           url: el,
-          type: 1
+          type: 0
       })
     })
 
@@ -41,7 +41,7 @@ class ProductService {
       productMediaData.push({
         product_id: product._id,
         url: data.video,
-        type: 2
+        type: 1
       })
     }
     const productMedia = await this.productMediaRepository.createMultiple(productMediaData);
@@ -71,7 +71,7 @@ class ProductService {
     return await product.populate([
       {
         path: 'brand',
-        select: ['_id', "name"]
+        select: ['_id', 'name']
       },
       {
         path: 'category'
@@ -176,7 +176,7 @@ class ProductService {
       productMediaData.push({
           product_id: product._id,
           url: el,
-          type: 1
+          type: 0
       })
     })
 
@@ -184,7 +184,7 @@ class ProductService {
       productMediaData.push({
         product_id: product._id,
         url: data.video,
-        type: 2
+        type: 1
       })
     };
     

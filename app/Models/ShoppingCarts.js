@@ -15,7 +15,8 @@ const shoppingCartsSchema = new mongoose.Schema(
     },
     quantity: {
       type: Number,
-      default: 0
+      required: true,
+      default: 1
     },
     created_by: {
       type: ObjectId,
@@ -62,6 +63,12 @@ shoppingCartsSchema.virtual('product', {
   ref: 'Product',
   foreignField: '_id',
   localField: 'product_id'
+});
+
+shoppingCartsSchema.virtual('shoppingCartClassifyValues', {
+  ref: 'ShoppingCartClassifyValues',
+  foreignField: 'shoppingCart_id',
+  localField: '_id'
 });
 
 export default mongoose.model('ShoppingCarts', shoppingCartsSchema, 'shoppingCarts');

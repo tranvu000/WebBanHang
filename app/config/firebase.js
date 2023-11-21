@@ -8,5 +8,5 @@ admin.initializeApp({
 const bucket = admin.storage().bucket();
 
 export default {
-    bucket
+    bucket,
 };

@@ -9,8 +9,9 @@ const shoppingCartsRouter = (app) => {
   router.use(authMiddleware);
 
   router.post('/', shoppingCartsController.store);
-  router.get('/:shoppingCartsId', shoppingCartsController.show);
-  router.delete('/:shoppingCartsId', shoppingCartsController.destroy);
+  router.get('/list', shoppingCartsController.list);
+  router.put('/:shoppingCartId', shoppingCartsController.update)
+  router.delete('/:shoppingCartId', shoppingCartsController.destroy);
 
   app.use('/shopping-carts', router);
 };

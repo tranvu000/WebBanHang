@@ -9,6 +9,7 @@ import authRouter from "./User/auth.js";
 import productRouter from "./User/product.js";
 import profileRouter from "./User/profile.js";
 import shoppingCartsRouter from "./User/shoppingCarts.js";
+import orderRouter from "./User/order.js";
 
 const router = (app) => {
   adminUserRouter(app);
@@ -22,6 +23,7 @@ const router = (app) => {
   productRouter(app);
   profileRouter(app);
   shoppingCartsRouter(app);
+  orderRouter(app)
 }
 
 export default router;
