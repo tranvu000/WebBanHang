@@ -3,7 +3,7 @@ import ProfileController from "../../app/Controller/User/ProfileController.js";
 import authMiddleware from "../../app/Middlewares/AuthMiddleware.js";
 import { uploadAvatarMiddleware } from "../../app/Middlewares/UploadImageMiddleware.js";
 import uploadFileMiddleware from "../../app/Middlewares/UploadFileMiddleware.js";
-import firebaseMiddleware from "../../app/Middlewares/FirebaseMiddleware.js";
+import firebaseMiddleware from "../../app/Middlewares/UploadFirebaseMiddleware.js";
 import { updateProfileValidator } from "../../app/Validations/User/ProfileValidation.js";
 
 const profileRouter = (app) => {
