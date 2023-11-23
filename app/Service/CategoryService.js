@@ -4,7 +4,8 @@ import CategoryRepository from "../Repositories/CategoryRepository.js";
 class CategoryService {
   constructor() {
     this.categoryRepository = new CategoryRepository()
-  }
+  };
+
   async store(data, authUser) {
     const category = await this.categoryRepository.create(data, authUser);
 
@@ -24,12 +25,12 @@ class CategoryService {
     };
     
     return await this.categoryRepository.index(conditions, limit, page);
-  }
+  };
 
   async show(categoryId) {
-    const category = await Category.findById(categoryId);
+    const categoryShow = await Category.findById(categoryId);
 
-    return category;
+    return categoryShow;
   }
 
   async update(categoryId, data, authUser) {
@@ -37,7 +38,7 @@ class CategoryService {
   }
 
   async destroy(categoryId, authUser) {
-    const categoryDelete = await this.categoryRepository.destroy(categoryId, authUser, false);
+    const categoryDelete = await this.categoryRepository.destroy(categoryId, authUser, true);
 
     return categoryDelete;
   }

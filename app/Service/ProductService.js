@@ -28,14 +28,16 @@ class ProductService {
     const product = await this.productRepository.create(productData, authUser);
 
     const productMediaData = []
-    const imageData = data.images
-    imageData.forEach(el => {
-      productMediaData.push({
-          product_id: product._id,
-          url: el,
-          type: 0
+    if(data.images){
+      const imageData = data.images
+      imageData.forEach(el => {
+        productMediaData.push({
+            product_id: product._id,
+            url: el,
+            type: 0
+        })
       })
-    })
+    };
 
     if(data.video){
       productMediaData.push({
@@ -43,20 +45,21 @@ class ProductService {
         url: data.video,
         type: 1
       })
-    }
+    };
+    
     const productMedia = await this.productMediaRepository.createMultiple(productMediaData);
     
-    const classifiesData = []
+    const classifiesData = [];
     data.classifies.forEach(el => {
       classifiesData.push({
         product_id: product._id,
         name: el.name,
         description: el.description,
       })
-    })
+    });
     const classifies = await this.classifyRepository.createMultiple(classifiesData);
 
-    const classifiesValueData = []
+    const classifiesValueData = [];
     data.classifies.forEach((el, index) => {
       el.classify_values.forEach(item => {
         classifiesValueData.push({
@@ -65,7 +68,7 @@ class ProductService {
           image: item.image,
         })
       })
-    })
+    });
     const classifyValue = await this.classifyValueRepository.createMultiple(classifiesValueData);
 
     return await product.populate([
@@ -87,7 +90,7 @@ class ProductService {
           }
         ]
       }
-    ])
+    ]);
   };
 
   async index(params) {
@@ -166,19 +169,21 @@ class ProductService {
       category_id: data.category_id,
       brand_id: data.brand_id
     }
-    const product = await this.productRepository.update(productId, productData);    
+    const product = await this.productRepository.update(productId, productData, authUser);    
 
     const productMediaDelete = await ProductMedia.findByIdAndDelete(productId);
 
     const productMediaData = []
-    const imageData = data.images
-    imageData.forEach(el => {
-      productMediaData.push({
-          product_id: product._id,
-          url: el,
-          type: 0
-      })
-    })
+    if(data.images){
+      const imageData = data.images
+      imageData.forEach(el => {
+        productMediaData.push({
+            product_id: product._id,
+            url: el,
+            type: 0
+        })
+      });
+    };
 
     if(data.video){
       productMediaData.push({

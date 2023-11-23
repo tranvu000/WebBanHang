@@ -33,17 +33,16 @@ const brandSchema = new mongoose.Schema (
       type: Date
     }
   },
-
   {
     toJSON: {
       getters: true
     },
-
     timestamps: {
       createdAt: "created_at",
       updatedAt: "updated_at"
-    }
+    },
+    id: false
   }
 );
 
-export default mongoose.model('Brand', brandSchema, 'brands')
+export default mongoose.model('Brand', brandSchema, 'brands');

@@ -73,7 +73,7 @@ orderDetailsSchema.virtual('product', {
 
 orderDetailsSchema.virtual('orderDetailClassifyValues', {
   ref: 'OrderDetailClassifyValues',
-  foreignField: 'orderDatail_id',
+  foreignField: 'orderDetail_id',
   localField: '_id',
   // justOne: true,
 });

@@ -37,7 +37,7 @@ class BaseRepository {
       page,
       totalPage: Math.ceil(total / limit),
     };
-  }
+  };
 
   async update(id, data, authUser) {
     

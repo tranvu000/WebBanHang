@@ -3,9 +3,9 @@ import UserService from "../../Service/UserService.js";
 import firebase from "../../config/firebase.js";
 class ProfileController {
   static userService = new UserService();
+  
   async show (req, res) {
     try {
-      console.log(req.authUser);
       const user = req.authUser.toObject();
       const blob = firebase.bucket.file(user.avatar);
       const options = {
@@ -19,23 +19,8 @@ class ProfileController {
     } catch (e) {
       res.status(500).json(responseError(e, 500))
     }
-  }
+  };
 
-  async changePassword(req, res) {
-    try {
-      res.status(201).json(responseSuccess(
-        await ProfileController.userService.update(
-          req.authUser._id,
-          {
-            password: hashString(req.body.password)
-          }
-        ),
-        201
-      ));
-    } catch (e) {
-      res.status(500).json(responseError(e, 500))
-    }
-  }
   async update(req, res) {
     try {
       const data = req.body;
@@ -53,7 +38,7 @@ class ProfileController {
     } catch (e) {
       res.status(500).json(responseError(e, 500))
     }
-  }
-}
+  };
+};
 
 export default ProfileController;

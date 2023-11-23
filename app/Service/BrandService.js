@@ -24,13 +24,13 @@ class BrandService {
       }
     };
 
-    return await this.brandRepository.index(conditions, limit, page)
+    return await this.brandRepository.index(conditions, limit, page);
   };
 
   async show (brandId) {
-    const brand = await Brand.findById(brandId);
+    const brandShow = await Brand.findById(brandId);
 
-    return brand;
+    return brandShow;
   };
 
   async update (brandId, data, authUser) {

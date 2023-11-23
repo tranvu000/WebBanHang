@@ -143,13 +143,33 @@ export const parserJWTToken = (bearerToken, withBearerPrefix = true) => {
 
 export const generateVerifyCode = (numberOfDigits) => {
   const n = parseInt(numberOfDigits);
-  const number = Math.ceil(Math.random() * Math.pow(10, n));
-  let numberString = number.toString();
-  const l = numberString.length;
+  const number = Math.floor(Math.random() * Math.pow(10, n)) + 1;
+  let numberStr = number.toString();
+  const l = numberStr.length;
+  for (let i = 0; i < 6 - l; ++i) {
+    numberStr = '0' + numberStr;
+  }
+  return numberStr;
+};
 
-  // for (let i = 0; i < 6)
+export const isVerifyEmail = async (email, verifyCode) => {
+  try {
+    const res = await VerifyModel.findOne({ email });
+    if (res) {
+      const { code, dateCreated } = res;
+      if (code !== verifyCode) return false;
+      const now = Date.now();
 
-}
+      if (now - dateCreated > constants.VERIFY_CODE_TIME_MILLISECONDS)
+        return false;
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
 
 export const generateUrlFromFirebase = async (path) => {
   const blob = firebase.bucket.file(path);

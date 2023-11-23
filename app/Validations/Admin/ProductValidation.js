@@ -1,5 +1,6 @@
 import Joi from "joi";
 import { baseJoiValidator } from "../BaseValidation.js";
+import { PRODUCT } from "../../config/constants.js";
 
 export const storeUpdateProductValidator = baseJoiValidator(
   Joi.object({
@@ -27,15 +28,47 @@ export const storeUpdateProductValidator = baseJoiValidator(
       "string.base": "brand_id phai la chuoi",
       "any.required": "brand_id khong duoc de trong"
     }),
-    // classifies: Joi.array().items(
-    //   Joi.object(
-    //     {
-    //       name: Joi.string().
-
-    //       },
-    //       class_values: Joi.a
-    //     }
-    //   ).
+    classifies: Joi.array().items(
+      Joi.object({
+        name: Joi.string().max(255).required().messages({
+          "string.base": "Classify phai la chuoi",
+          "string.max": "Classify nho hon hoac bang {{#limit}} ky tu",
+          "any.required": "Classify khong duoc de trong",
+        }),
+        description: Joi.string().max(1000).messages({
+          "string.base": "Mo ta phai la chuoi",
+          "string.max": "Mo ta nho hon hoac bang {{#limit}} ky tu",
+        }),
+        classify_values: Joi.array().items(
+          Joi.object({
+            value: Joi.string().max(255).required().messages({
+              "string.base": "Value phai la chuoi",
+              "string.max": "Value nho hon hoac bang {{#limit}} ky tu",
+              "any.required": "Value khong duoc de trong",
+            }),
+            image: Joi.string().optional().messages({
+              'string.base': 'Image phai la jpg',
+            })
+          })
+        )
+      })
+    ),
+    product_media: Joi.array().items(
+      Joi.object({
+        url: Joi.string().required().messages({
+          'string.base': 'Url phai la chuoi',
+          "any.required": "Url khong duoc de trong",
+        }),
+        type: Joi.number()
+          .valid(PRODUCT.type.images, PRODUCT.type.video)
+          .default(PRODUCT.type.images)
+          .optional()
+          .messages({
+            "number.base": "Type phai la number",
+            "any.only": "Type khong hop le",
+          }),
+      })
+    )
   })
 );
 
@@ -54,4 +87,4 @@ export const indexProductValidator = baseJoiValidator(
   }),
 
   "query"
-)
+);

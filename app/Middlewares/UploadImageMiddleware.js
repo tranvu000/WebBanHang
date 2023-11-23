@@ -12,6 +12,16 @@ const storageAvatar = multer.diskStorage({
   }
 });
 
+const storageImage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.resolve('./storage/category/image'))
+  },
+
+  filename: (req, file, cb) => {
+    cb(null, moment().unix() + '-' + file.originalname)
+  }
+});
+
 const storageLogo = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.resolve('./storage/brand/logo'))
@@ -20,7 +30,7 @@ const storageLogo = multer.diskStorage({
   filename: (req, file, cb) => {
     cb(null, moment().unix() + '-' + file.originalname)
   }
-})
+});
 
 const fileFilter = (req, file, cb) => {
   const allowMimes = ['image/jpeg', 'image/jpg', 'image/png'];
@@ -30,10 +40,20 @@ const fileFilter = (req, file, cb) => {
   } else {
     cb(new Error('Invalid the type'))
   }
-}
+};
 
 export const uploadAvatarMiddleware = multer({
   storage: storageAvatar,
+
+  limit: {
+    fileSize: 250000
+  },
+
+  fileFilter
+});
+
+export const uploadImageMiddleware = multer({
+  storage: storageImage,
 
   limit: {
     fileSize: 250000
@@ -50,4 +70,4 @@ export const uploadLogoMiddleware = multer({
   },
 
   fileFilter
-})
+});

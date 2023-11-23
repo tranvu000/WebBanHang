@@ -1,7 +1,6 @@
 import express from 'express';
 import authMiddleware from '../../app/Middlewares/AuthMiddleware.js';
 import ProfileController from '../../app/Controller/Admin/ProfileController.js';
-import { changePasswordValidator } from '../../app/Validations/Admin/ProfileValidation.js';
 import { uploadAvatarMiddleware } from '../../app/Middlewares/UploadImageMiddleware.js';
 
 const profileAdminRouter = (app) => {
@@ -10,8 +9,7 @@ const profileAdminRouter = (app) => {
 
   router.use(authMiddleware);
 
-  router.get('/show', profileController.show)
-  router.put('/change-password',changePasswordValidator, profileController.changePassword)
+  router.get('/', profileController.show)
   router.put('/update', uploadAvatarMiddleware.single('avatar'), profileController.update)
 
   app.use('/admin/profile', router);

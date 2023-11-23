@@ -1,7 +1,5 @@
 import express from "express";
-import
-  ProductController
-from "../../app/Controller/User/ProductController.js";
+import ProductController from "../../app/Controller/User/ProductController.js";
 import authMiddleware from "../../app/Middlewares/AuthMiddleware.js";
 import {
   listProductBrandValidator,

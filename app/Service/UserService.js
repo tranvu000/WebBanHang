@@ -1,7 +1,6 @@
 import User from "../Models/User.js";
 import EmailService from "./EmailService.js";
 import UserRepository from "../Repositories/UserRepository.js";
-import { createTransport } from "nodemailer";
 import { generateUrlFromFirebase } from "../Common/helpers.js";
 
 class UserService {
@@ -11,19 +10,14 @@ class UserService {
   }
 
   async store(data, authUser) {
-    const userByName = await User.findOne({
-      $or: [
-        {
-          email: data.email
-        },
-        {
-          phone: data.phone
-        }
-      ],
-    });
-
-    if(!!userByName) {
-      throw new Error("Tai khoan da ton tai");
+    const userEmail = await User.findOne({email: data.email});
+    if (!!userEmail) {
+      throw new Error("Email da ton tai");
+    };
+    
+    const userPhone = await User.findOne({phone: data.phone});
+    if (!!userPhone) {
+      throw new Error("Phone number da ton tai");
     };
 
     const user = await this.userRepository.create(data, authUser);
@@ -49,7 +43,7 @@ class UserService {
 
     if (level) {
       conditions.level = level;
-    }
+    };
 
     if (keyword) {
       conditions.$or = [
@@ -66,7 +60,7 @@ class UserService {
     }
 
     return await this.userRepository.index(conditions, limit, page);
-  }
+  };
 
   async show(userId) {
     let user = await User.findById(userId);
@@ -74,7 +68,7 @@ class UserService {
 
     if (user.avatar) {
       user.avatar = await generateUrlFromFirebase(user.avatar);
-    }
+    };
     
     return user;
   };
@@ -84,32 +78,37 @@ class UserService {
   };
 
   async updateUser(userId, data, authUser) {
-    const userEmaiPhone = await User.findOne({
-      $or: [
-        {
-          email: data.email
-        },
-        {
-          phone: data.phone
-        }
-      ]
-    });
+    const email_new = data.email;
+    const { email } = await User.findById(userId);
+    if (email_new !== email) {
+      const userEmail = await User.findOne({email: email_new});
+      if (!!userEmail) {
+      throw new Error("Email da ton tai");
+      };
+    };
 
-    if (!!userEmaiPhone) {
-      throw new Error("Tai khoan da ton tai")
-    }
+    const phone_new = data.phone;
+    const { phone } = await User.findById(userId);
+    if (phone_new !== phone) {
+      const userPhone = await User.findOne({phone: phone_new});
+      if (!!userPhone) {
+        throw new Error("Phone number da ton tai");
+      };
+    };
+
     if (data.avatar) {
       data.avatar = await generateUrlFromFirebase(data.avatar);
     }
     const result = await this.userRepository.update(userId, data, authUser);
+
     return result;
   };
 
   async destroy(userId, authUser) {
-    const userDeleted = await User.findByIdAndDelete(userId, authUser);
+    const userDeleted = await this.userRepository.destroy(userId, authUser, true);
 
     return userDeleted;
-  }
-}
+  };
+};
 
 export default UserService;

@@ -7,13 +7,10 @@ const categorySchema = new mongoose.Schema(
       type: String,
       require: true
     },
-    description: {
-      type: String,
-    },
     image: {
       type: String,
       get: (value) => {
-        return process.env.DOMAIN + '/product/category/' + value
+        return process.env.DOMAIN + '/category/image/' + value
       },
       default: 'default_category.png',
     },
@@ -33,16 +30,15 @@ const categorySchema = new mongoose.Schema(
       type: Date
     }
   },
-
   {
     toJSON: {
       getters: true
     },
-
     timestamps: {
       createdAt: 'created_at',
       updatedAt: 'updated_at'
-    }
+    },
+    id: false
   }
 );
 

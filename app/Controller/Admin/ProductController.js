@@ -22,13 +22,13 @@ class ProductController {
             '/product/any/classifies/image/' + 
             file.filename
         }
-      }
+      };
     
       const result = await ProductController.productService.store(data, req.authUser)
       res.status(201).json(responseSuccess(
         result,
         201
-      ))
+      ));
     } catch (e) {
       res.status(500).json(responseError(e, 500))
     }
@@ -75,8 +75,8 @@ class ProductController {
           'storage/product/any/classifies/image/' +
           file.filename
         }
-      }
-      console.log("data>>>>>", data);
+      };
+      
       res.status(201).json(responseSuccess(
         await ProductController.productService.update(
           req.params.productId,
