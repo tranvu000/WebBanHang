@@ -42,16 +42,46 @@ export const registerAuthValidator = baseJoiValidator (
     gender: Joi.number()
       .valid(USERS.gender.male, USERS.gender.female)
       .default(USERS.gender.male)
+      .optional()
       .messages({
-        "number.base": "gender phai la number",
-        "any.only": "gender khong hop le"
+        "number.base": "Gender phai la number",
+        "any.only": "Gender khong hop le"
       }),
     level: Joi.number()
       .valid(USERS.levels.admin, USERS.levels.user)
       .default(USERS.levels.user)
+      .optional()
       .messages({
-        "number.base": "level phai la number",
-        "any.only": "level khong hop le",
+        "number.base": "Level phai la number",
+        "any.only": "Level khong hop le",
       }),
   })
-)
+);
+
+export const confirmAccountValidator = baseJoiValidator(
+  Joi.object({
+    token: Joi.string().required().messages({
+      "string.base": "Token phai la chuoi",
+      "any.required": "Token khong duoc de trong",
+    })
+  })
+);
+
+export const changePasswordValidator = baseJoiValidator(
+  Joi.object({
+    token: Joi.string().required().messages({
+      "string.base": "Token phai la chuoi",
+      "any.required": "Token khong duoc de trong",
+    }),
+    oldPassword: Joi.string().min(8).required().messages({
+      "string.base": "oldPassword phai la chuoi",
+      "string.min": "oldPassword lon hon hoac bang {{#limit}} ky tu",
+      "any.required": "oldPassword khong duoc de trong",
+    }),
+    newPassword: Joi.string().min(8).required().messages({
+      "string.base": "newPassword phai la chuoi",
+      "string.min": "newPassword lon hon hoac bang {{#limit}} ky tu",
+      "any.required": "newPassword khong duoc de trong",
+    }),
+  })
+);

@@ -30,10 +30,15 @@ export const changePasswordValidator = baseJoiValidator(
       "string.base": "Token phai la chuoi",
       "any.required": "Token khong duoc de trong",
     }),
-    password: Joi.string().min(8).required().messages({
-      "string.base": "Password phai la chuoi",
-      "string.min": "Password lon hon hoac bang {{#limit}} ky tu",
-      "any.required": "Password khong duoc de trong",
+    oldPassword: Joi.string().min(8).required().messages({
+      "string.base": "oldPassword phai la chuoi",
+      "string.min": "oldPassword lon hon hoac bang {{#limit}} ky tu",
+      "any.required": "oldPassword khong duoc de trong",
+    }),
+    newPassword: Joi.string().min(8).required().messages({
+      "string.base": "newPassword phai la chuoi",
+      "string.min": "newPassword lon hon hoac bang {{#limit}} ky tu",
+      "any.required": "newPassword khong duoc de trong",
     }),
   })
 );

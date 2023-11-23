@@ -52,17 +52,17 @@ class OrderService {
     };
     const order = await this.orderRepository.create(orderData, authUser);
     orderDetailsData.map(
-      orderDatail => {
-        orderDatail.order_id = order._id
+      orderDetail => {
+        orderDetail.order_id = order._id
       }  
     )
-    const orderDatails = await this.orderDetailsRepository.createMultiple(orderDetailsData);
+    const orderDetails = await this.orderDetailsRepository.createMultiple(orderDetailsData);
 
     const orderDetailClassifyValueData = [];
     data.order_details.forEach((el, index) => {
       el.orderDetailClassifyValues.forEach(item => {
         orderDetailClassifyValueData.push({
-          orderDatail_id: orderDatails[index]._id,
+          orderDetail_id: orderDetails[index]._id,
           classifyValue_id: item.classifyValue_id
         })
       })
@@ -91,17 +91,23 @@ class OrderService {
     ]);
   };
 
-  async list (params) {
+  async index (params) {
     let { keyword, limit = 20, page = 1 } = params;
     limit = +limit;
     page = +page;
     let conditions = {};
 
     if (keyword) {
-      conditions = {
-        name: new RegExp (`${keyword}`, 'i')
-      }
+      conditions.$or = [
+        {
+          name: new RegExp (`${keyword}`, 'i')
+        },
+        {
+          orderDetail_id: new RegExp (`${keyword}`, 'i')
+        }
+      ]
     };
+    
     let orderDetails = await this.orderDetailsRepository.getByConditions({}, [
       {
         path: 'product',
@@ -109,6 +115,7 @@ class OrderService {
         match: conditions
       }
     ]);
+
     const orderIds = orderDetails.map(
       orderDetail => {
         if (orderDetail.product) {
@@ -118,6 +125,7 @@ class OrderService {
     ).filter(
       orderDetail => orderDetail
     );
+
     const orders = await this.orderRepository.index(
       {
         _id: {
@@ -129,7 +137,10 @@ class OrderService {
       [
         {
           path: 'order_details',
-          match: { product_id: {$exists: true}},
+          match: {
+            product_id: {$exists: true},
+          },
+          match: conditions,
           populate: [
             {
               path: 'product',
@@ -151,6 +162,33 @@ class OrderService {
 
     return orders;
   };
+
+  async list (authUserId) {
+    const orderList = await Order.find({user_id: authUserId});
+    const populateOrder = await Promise.all(orderList.map(async (order) => {
+      return order.populate([
+        {
+          path: 'order_details',
+          populate: [
+            {
+              path: 'product',
+              select: 'name',
+            },
+            {
+              path: 'orderDetailClassifyValues',
+              populate: [
+                {
+                  path: 'classify_values'
+                }
+              ]
+            }
+          ]
+        }
+      ])
+    }));
+
+    return populateOrder;
+  }
 
   async update (orderId, data, authUser) {
     const order = await this.orderRepository.update(

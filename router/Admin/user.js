@@ -10,7 +10,8 @@ const adminUserRouter = (app) => {
   const router = express.Router();
   const userController = new UserController();
 
-  router.use(authMiddleware)
+  router.use(authMiddleware);
+  
   router.post("/", storeUpdateUserValidator, userController.store);
   router.get("/", IndexUserValidator, userController.index);
   router.get("/:userId", userController.show);

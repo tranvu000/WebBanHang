@@ -3,16 +3,27 @@ import CategoryService from "../../Service/CategoryService.js";
 
 class CategoryController {
   static categoryService = new CategoryService;
+
   async store(req, res) {
     try {
+      const data = {
+        name: req.body.name
+      };
+      if (req.file) {
+        data.image = req.file.filename;
+      };
+
       res.status(201).json(responseSuccess(
-        await CategoryController.categoryService.store(req.body, req.authUser),
+        await CategoryController.categoryService.store(
+          data,
+          req.authUser
+        ),
         201
       ))
     } catch (e) {
       res.status(500).json(responseError(e, 500))
     }
-  }
+  };
 
   async index(req, res) {
     try {
@@ -23,8 +34,7 @@ class CategoryController {
     } catch (e) {
       res.status(500).json(responseError(e, 500))
     }
-    console.log(req.query);
-  }
+  };
   
   async show(req, res) {
     try {
@@ -34,15 +44,21 @@ class CategoryController {
       ))
     } catch (e) {
       res.status(500).json(responseError(e, 500))
-    }
-  }
+    };
+  };
 
   async update(req, res) {
     try {
+      const data = req.body;
+
+      if (req.file) {
+        data.image = req.file.filename;
+      };
+
       res.status(201).json(responseSuccess(
         await CategoryController.categoryService.update(
           req.params.categoryId,
-          req.body,
+          data,
           req.authUser
         ),
         201
@@ -50,7 +66,7 @@ class CategoryController {
     } catch (e) {
       res.status(500).json(responseError(e, 500))
     }
-  }
+  };
 
   async destroy(req, res) {
     try {
@@ -61,6 +77,14 @@ class CategoryController {
         ),
         201
       ))
+    } catch (e) {
+      res.status(500).json(responseError(e, 500));
+    }
+  };
+
+  async list(req, res) {
+    try {
+      res.send('hi')
     } catch (e) {
       res.status(500).json(responseError(e, 500));
     }

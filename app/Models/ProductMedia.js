@@ -13,7 +13,7 @@ const productMediaSchema = new mongoose.Schema(
     type: {
       type: Number,
       require: true,
-      default: 1
+      default: 0
     },
     product_id: {
       type: ObjectId,

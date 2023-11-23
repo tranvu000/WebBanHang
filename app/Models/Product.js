@@ -48,7 +48,7 @@ const productSchema = new mongoose.Schema(
   {
     toJSON: {
       getters: true,
-      virtuals: true //mặc định virtuals: false
+      virtuals: true
     },
     toObject: {
       virtuals: true,
@@ -57,8 +57,8 @@ const productSchema = new mongoose.Schema(
       createdAt: "created_at",
       updatedAt: "updated_at"
     },
-    id: false, // ẩn tạo id mới, id = _id của từng table
-    versionKey: false //nhằm lược bỏ "__v": trong DB
+    id: false,
+    versionKey: false
   }
 );
 

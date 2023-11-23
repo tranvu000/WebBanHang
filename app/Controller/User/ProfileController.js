@@ -5,33 +5,18 @@ class ProfileController {
   static userService = new UserService();
   async show (req, res) {
     try {
-      // const blob = firebase.bucket.file(user.avatar);
-      // const options = {
-      //   version: 'v2',
-      //   action: 'read',
-      //   expires: Date.now() + 1000 * 60 * 60
-      // };
-      // const url = await blob.getSignedUrl(options);
-      // user.avatar = url[0];
+      const blob = firebase.bucket.file(user.avatar);
+      const options = {
+        version: 'v2',
+        action: 'read',
+        expires: Date.now() + 1000 * 60 * 60
+      };
+      const url = await blob.getSignedUrl(options);
+      user.avatar = url[0];
       res.status(201).json(responseSuccess(req.authUser))
     } catch (e) {
       console.log(e);
       res.status(500).json(responseError(e))
-    }
-  };
-
-  async changePassword (req, res) {
-    try {
-      res.status(201).json(responseSuccess(
-        await ProfileController.userService.update(
-          req.authUser._id,
-          {
-            password: hashString(req.body.password)
-          },
-        )
-      ))
-    } catch (e) {
-      res.status(500).json(responseError(e, 500))
     }
   };
 

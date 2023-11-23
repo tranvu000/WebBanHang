@@ -29,8 +29,8 @@ export const storeUpdateUserValidator = baseJoiValidator(
       .valid(USERS.gender.male, USERS.gender.female)
       .default(USERS.gender.male)
       .messages({
-        "number.base": "gender phai la number",
-        "any.only": "gender khong hop le",
+        "number.base": "Gender phai la number",
+        "any.only": "Gender khong hop le",
       }),
     birthday: Joi.date().optional().messages({
       "date.base": "Birthday phai la ngay",
@@ -38,9 +38,10 @@ export const storeUpdateUserValidator = baseJoiValidator(
     level: Joi.number()
       .valid(USERS.levels.admin, USERS.levels.user)
       .default(USERS.levels.admin)
+      .optional()
       .messages({
-        "number.base": "level phai la number",
-        "any.only": "level khong hop le",
+        "number.base": "Level phai la number",
+        "any.only": "Level khong hop le",
       }),
     address: Joi.string().optional().messages({
       "string.base": "Address phai la chuoi",
@@ -58,8 +59,8 @@ export const IndexUserValidator = baseJoiValidator(
       .default(USERS.levels.user)
       .optional()
       .messages({
-        "number.base": "level phai la number",
-        "any.only": "level khong hop le",
+        "number.base": "Level phai la number",
+        "any.only": "Level khong hop le",
       }),
     keyword: Joi.string().optional().messages({
       "string.base": "Keyword phai la chuoi",

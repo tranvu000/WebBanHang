@@ -57,7 +57,6 @@ const userSchema = new mongoose.Schema(
       type: Date,
     },
   },
-
   {
     toJSON: {
       getters: true,
@@ -71,6 +70,7 @@ const userSchema = new mongoose.Schema(
       createdAt: "created_at",
       updatedAt: "updated_at",
     },
+    id: false
   }
 );
 // userSchema.virtual('_avatar').get(async function () {

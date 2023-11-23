@@ -32,6 +32,19 @@ class OrderController {
     try {
       res.status(201).json(responseSuccess(
         await OrderController.orderService.list(
+          req.authUser._id
+        ),
+        201
+      ))
+    } catch (e) {
+      res.status(500).json(responseError(e, 500))
+    }
+  }
+
+  async index(req, res) {
+    try {
+      res.status(201).json(responseSuccess(
+        await OrderController.orderService.index(
           req.query
         ),
         201

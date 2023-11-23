@@ -23,8 +23,8 @@ const productAdminRouter = (app) => {
       name: 'classifies[][classify_values][][image]',
       maxCount: 10,
     },
-  ]), productController.store);
-  router.get('/', productController.index);
+  ]), storeUpdateProductValidator, productController.store);
+  router.get('/', indexProductValidator, productController.index);
   router.get('/:productId', productController.show);
   router.put('/:productId', storeUpdateProductAnyMiddleware.any([
     {
@@ -39,7 +39,7 @@ const productAdminRouter = (app) => {
       name: 'classifies[][classify_values][][image]',
       maxCount: 10,
     },
-  ]), productController.update);
+  ]), storeUpdateProductValidator, productController.update);
   router.delete('/:productId', productController.destroy);
 
   app.use('/admin/product', router)
