@@ -96,11 +96,7 @@ class UserService {
       };
     };
 
-    if (data.avatar) {
-      data.avatar = await generateUrlFromFirebase(data.avatar);
-    }
     const result = await this.userRepository.update(userId, data, authUser);
-
     return result;
   };
 

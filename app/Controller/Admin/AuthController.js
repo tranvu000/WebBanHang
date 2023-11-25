@@ -5,11 +5,13 @@ import {
 } from "../../Common/helpers.js";
 import AuthService from "../../Service/AuthService.js";
 import client from "twilio";
+import { Vonage } from '@vonage/server-sdk';
+import { USERS } from "../../config/constants.js";
 class AuthController {
   static authService = new AuthService();
   async login(req, res) {
     try {
-      const level = 0;
+      const level = USERS.levels.admin;
       res.status(201).json(responseSuccess(
         await AuthController.authService.login(
           req.body.userEmailPhone,
@@ -51,37 +53,40 @@ class AuthController {
     };
   };
   
-  async forgotPassword(req, res) {
+  async postSendCodeForgotPassword(req, res) {
     try {
-      const level = 0
+      const level = USERS.levels.admin;
+      const { phone } = req.body;
+
       res.status(201).json(responseSuccess(
-        await AuthController.authService.login(
-          req.body.userEmailPhone,
-          level,
+        await AuthController.authService.postSendCodeForgotPassword(
+          phone,
+          level
         ),
         201
-      ))
-      // const { email } = req.body;
-      // const user = await AuthController.authService.getUser({ email });
-      // if (!user) {
-      //   throw Error("error");
-      // }
-      // const phone_number = user.phone;
-      // const accountSid = "AC661ccc0309c8e836d8f9073d03b71367";
-      // const authToken = "80ed7445cbb6912eccb6b79fb2f606f9";
-      // const clientTwilio = client(accountSid, authToken);
-
-      // const result = await clientTwilio.verify.v2
-      //   .services("VAb3b46e3b6474bfbaecff5d23c0287361")
-      //   .verifications.create({ to: "+84962628409", channel: "sms" })
-      //   .then((verification) => console.log(verification.status));
-      //   res
-      //   .status(201)
-      //   .json('ok');
+      ));
     } catch (e) {
       res.status(500).json(responseError(e, 500));
     }
-  }
+  };
+
+  async postResetPassword (req, res) {
+    try {
+      const level = USERS.levels.admin;
+      const { phone, password, verifyCode } = req.body;
+      res.status(201).json(responseSuccess(
+        await AuthController.authService.postResetPassword(
+          phone,
+          password,
+          verifyCode,
+          level
+        ),
+        201
+      ))
+    } catch (e) {
+      res.status(500).json(responseError(e, 500));
+    }
+  };
 }
 
 export default AuthController;

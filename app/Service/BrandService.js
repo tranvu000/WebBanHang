@@ -1,5 +1,6 @@
 import BrandRepository from '../Repositories/BrandRepository.js';
 import Brand from '../Models/Brand.js';
+import { generateUrlFromFirebase } from '../Common/helpers.js';
 
 class BrandService {
   constructor() {
@@ -28,9 +29,14 @@ class BrandService {
   };
 
   async show (brandId) {
-    const brandShow = await Brand.findById(brandId);
+    let brand = await Brand.findById(brandId);
+    brand = brand.toObject();
 
-    return brandShow;
+    if (brand.logo) {
+      brand.logo = await generateUrlFromFirebase(brand.logo);
+    };
+
+    return brand;
   };
 
   async update (brandId, data, authUser) {

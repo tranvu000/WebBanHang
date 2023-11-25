@@ -5,7 +5,8 @@ import {
   storeUpdateBrandValidation, 
   indexBrandValidation
 } from '../../app/Validations/Admin/BrandValidation.js'
-import { uploadLogoMiddleware } from '../../app/Middlewares/UploadImageMiddleware.js';
+import uploadImageMiddleware from '../../app/Middlewares/UploadImageMiddleware.js';
+import { uploadLogoFirebaseMiddleware } from '../../app/Middlewares/UploadFirebaseMiddleware.js';
 
 const brandRouter = (app) => {
   const router = express.Router();
@@ -13,10 +14,12 @@ const brandRouter = (app) => {
 
   router.use(authMiddleware);
 
-  router.post('/', uploadLogoMiddleware.single('logo'), storeUpdateBrandValidation, brandController.store);
+  // router.post('/', uploadLogoMiddleware.single('logo'), storeUpdateBrandValidation, brandController.store);
+  router.post('/', uploadImageMiddleware.single('logo'), uploadLogoFirebaseMiddleware, storeUpdateBrandValidation, brandController.store)
   router.get('/', indexBrandValidation, brandController.index);
   router.get('/:brandId', brandController.show);
-  router.put('/:brandId', uploadLogoMiddleware.single('logo'), storeUpdateBrandValidation, brandController.update);
+  // router.put('/:brandId', uploadLogoMiddleware.single('logo'), storeUpdateBrandValidation, brandController.update);
+  router.put('/:brandId',uploadImageMiddleware.single('logo'), uploadLogoFirebaseMiddleware, storeUpdateBrandValidation, brandController.update)
   router.delete('/:brandId', brandController.destroy);
 
   app.use('/admin/brand', router)

@@ -98,14 +98,9 @@ class OrderService {
     let conditions = {};
 
     if (keyword) {
-      conditions.$or = [
-        {
-          name: new RegExp (`${keyword}`, 'i')
-        },
-        {
-          orderDetail_id: new RegExp (`${keyword}`, 'i')
-        }
-      ]
+      conditions = {
+        name: new RegExp (`${keyword}`, 'i')
+      }
     };
     
     let orderDetails = await this.orderDetailsRepository.getByConditions({}, [
