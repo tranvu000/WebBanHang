@@ -2,6 +2,8 @@ import crypto from "node:crypto";
 import moment from "moment";
 import { Buffer } from "node:buffer";
 import firebase from "../config/firebase.js";
+import Verify from "../Models/Verify.js";
+import { VERIFY_CODE_TIME_MILLISECONDS } from "../config/constants.js";
 
 export const responseSuccess = (data, status = 200, message = "") => {
   return {
@@ -152,15 +154,15 @@ export const generateVerifyCode = (numberOfDigits) => {
   return numberStr;
 };
 
-export const isVerifyEmail = async (email, verifyCode) => {
+export const isVerifyPhone = async (phone, verifyCode) => {
   try {
-    const res = await VerifyModel.findOne({ email });
-    if (res) {
-      const { code, dateCreated } = res;
+    const result = await Verify.findOne({ phone });
+    if (result) {
+      const { code, dateCreated } = result;
       if (code !== verifyCode) return false;
       const now = Date.now();
 
-      if (now - dateCreated > constants.VERIFY_CODE_TIME_MILLISECONDS)
+      if (now - dateCreated > VERIFY_CODE_TIME_MILLISECONDS)
         return false;
       return true;
     }
@@ -176,7 +178,7 @@ export const generateUrlFromFirebase = async (path) => {
   const options = {
     version: 'v2',
     action: 'read',
-    expires: Date.now() + 1000 * 60 * 60
+    expires: Date.now() + 60 * 60
   };
   const url = await blob.getSignedUrl(options);
   

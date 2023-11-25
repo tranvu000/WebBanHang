@@ -1,9 +1,9 @@
 import express from "express";
 import ProfileController from "../../app/Controller/User/ProfileController.js";
 import authMiddleware from "../../app/Middlewares/AuthMiddleware.js";
-import uploadFileMiddleware from "../../app/Middlewares/UploadFileMiddleware.js";
-import firebaseMiddleware from "../../app/Middlewares/UploadFirebaseMiddleware.js";
+import { uploadAvatarFirebaseMiddleware } from "../../app/Middlewares/UploadFirebaseMiddleware.js";
 import { updateProfileValidator } from "../../app/Validations/User/ProfileValidation.js";
+import uploadImageMiddleware from "../../app/Middlewares/UploadImageMiddleware.js";
 
 const profileRouter = (app) => {
   const router = express.Router();
@@ -12,7 +12,7 @@ const profileRouter = (app) => {
   router.use(authMiddleware)
 
   router.get('/', profileController.show);
-  router.put('/update',uploadFileMiddleware.single('avatar'), firebaseMiddleware, updateProfileValidator, profileController.update)
+  router.put('/update', uploadImageMiddleware.single('avatar'), uploadAvatarFirebaseMiddleware, updateProfileValidator, profileController.update)
 
   app.use('/profile', router);
 };

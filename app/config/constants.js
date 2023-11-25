@@ -27,4 +27,8 @@ export const ORDER_STATUS = {
   completed: 3,
   cancelled: 4,
   refund: 5
-}
+};
+
+export const NUMBER_VERIFY_CODE = 6;
+
+export const VERIFY_CODE_TIME_MILLISECONDS = 10 * 60 * 1000;

@@ -43,3 +43,34 @@ export const changePasswordValidator = baseJoiValidator(
   })
 );
 
+export const forgotPasswordValidator = baseJoiValidator(
+  Joi.object({
+    phone: Joi.string().min(10).max(11).required().messages({
+      "string.base": "So dien thoai phai la chuoi",
+      "string.min": "So dien thoai lon hon hoac bang {{#limit}} ky tu",
+      "string.max": "So dien thoai nho hon hoac bang {{#limit}} ky tu",
+      "any.required": "So dien thoai khong duoc de trong",
+    }),
+  })
+);
+
+export const resetPasswordValidator = baseJoiValidator(
+  Joi.object({
+    phone: Joi.string().min(10).max(11).required().messages({
+      "string.base": "So dien thoai phai la chuoi",
+      "string.min": "So dien thoai lon hon hoac bang {{#limit}} ky tu",
+      "string.max": "So dien thoai nho hon hoac bang {{#limit}} ky tu",
+      "any.required": "So dien thoai khong duoc de trong",
+    }),
+    password: Joi.string().min(8).required().messages({
+      "string.base": "Password phai la chuoi",
+      "string.min": "Password lon hon hoac bang {{#limit}} ky tu",
+      "any.required": "Password khong duoc de trong",
+    }),
+    verifyCode: Joi.string().required().messages({
+      "string.base": "verifyCode phai la chuoi",
+      "any.required": "verifyCode khong duoc de trong",
+    })
+  })
+);
+

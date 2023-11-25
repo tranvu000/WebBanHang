@@ -1,6 +1,11 @@
 import express from "express";
 import authMiddleware from "../../app/Middlewares/AuthMiddleware.js";
 import OrderController from "../../app/Controller/User/OrderController.js";
+import { 
+  indexOrderValidator,
+  storeOrderValidator,
+  updateOrderValidator 
+} from "../../app/Validations/User/OrderValidation.js";
 
 const orderRouter = (app) => {
   const router = express.Router();
@@ -8,10 +13,10 @@ const orderRouter = (app) => {
 
   router.use(authMiddleware);
 
-  router.post('/', orderController.createOrder);
-  router.get('/', orderController.index);
+  router.post('/', storeOrderValidator, orderController.createOrder);
+  router.get('/', indexOrderValidator, orderController.index);
   router.get('/list', orderController.list);
-  router.put('/:orderId', orderController.update)
+  router.put('/:orderId', updateOrderValidator, orderController.update);
 
   app.use('/order', router);
 };

@@ -5,28 +5,42 @@ class ProfileController {
   static userService = new UserService();
   async show (req, res) {
     try {
-      const blob = firebase.bucket.file(user.avatar);
-      const options = {
-        version: 'v2',
-        action: 'read',
-        expires: Date.now() + 1000 * 60 * 60
+      if (!req.authUser) {
+        throw new Error('User khong ton tai')
       };
-      const url = await blob.getSignedUrl(options);
-      user.avatar = url[0];
-      res.status(201).json(responseSuccess(req.authUser))
+
+      if (req.authUser.level !== 1) {
+        throw new Error('Level khong phu hop')
+      };
+
+      res.status(201).json(responseSuccess(
+        await ProfileController.userService.show(
+          req.authUser._id
+        ),
+        201
+      ))
     } catch (e) {
-      console.log(e);
-      res.status(500).json(responseError(e))
+      res.status(500).json(responseError(e, 500))
     }
   };
 
   async update (req, res) {
     try {
+      if (!req.authUser) {
+        throw new Error('User khong ton tai')
+      };
+
+      if (req.authUser.level !== 1) {
+        throw new Error('Level khong phu hop')
+      };
+      
+      const userId = req.authUser._id;
       const data = req.body;
       res.status(201).json(responseSuccess(
         await ProfileController.userService.updateUser(
-          req.authUser._id,
-          data
+          userId,
+          data,
+          req.authUser
         )
       ))
     } catch (e) {

@@ -12,10 +12,7 @@ const brandSchema = new mongoose.Schema (
     },
     logo: {
       type: String,
-      get: (value) => {
-        return process.env.DOMAIN + '/brand/logo/' + value
-      },
-      default: "default_logo.png",
+      default: "brand/logo/default_logo.png",
     },
     created_by: {
       type: ObjectId

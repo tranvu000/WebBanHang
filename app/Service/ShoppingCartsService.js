@@ -87,6 +87,11 @@ class ShoppingCartsService {
   };
 
   async update (shoppingCartId, data, authUser) {
+    if (!data.quantity) {
+      const shoppingCart = await ShoppingCarts.findById(shoppingCartId);
+      data.quantity = shoppingCart.quantity
+    };
+
     const shoppingCartData = {
       quantity: data.quantity
     }
