@@ -1,5 +1,6 @@
 import AuthService from "../../Service/AuthService.js";
 import { responseError, responseSuccess } from "../../Common/helpers.js";
+import { USERS } from "../../config/constants.js";
 
 class AuthController {
   static authService = new AuthService();
@@ -28,7 +29,7 @@ class AuthController {
 
   async login (req, res) {
     try {
-      const level = 1
+      const level = USERS.levels.user
       res.status(201).json(responseSuccess(
         await AuthController.authService.login(
           req.body.userEmailPhone,
@@ -67,6 +68,41 @@ class AuthController {
     } catch (e) {
       res.status(500).json(responseError(e, 500));
     };
+  };
+
+  async postSendCodeForgotPassword(req, res) {
+    try {
+      const level = USERS.levels.user;
+      const { phone } = req.body;
+
+      res.status(201).json(responseSuccess(
+        await AuthController.authService.postSendCodeForgotPassword(
+          phone,
+          level
+        ),
+        201
+      ));
+    } catch (e) {
+      res.status(500).json(responseError(e, 500))
+    }
+  };
+
+  async postResetPassword(req, res) {
+    try {
+      const level = USERS.levels.user;
+      const { phone, password, verifyCode } = req.body;
+      res.status(201).json(responseSuccess(
+        await AuthController.authService.postResetPassword(
+          phone,
+          password,
+          verifyCode,
+          level
+        ),
+        201
+      ))
+    } catch (e) {
+      res.status(500).json(responseError(e, 500))
+    }
   };
 
 };

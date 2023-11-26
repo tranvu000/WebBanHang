@@ -5,8 +5,8 @@ import {
 } from "../../Common/helpers.js";
 import AuthService from "../../Service/AuthService.js";
 import client from "twilio";
-import { Vonage } from '@vonage/server-sdk';
 import { USERS } from "../../config/constants.js";
+import twilio from 'twilio';
 class AuthController {
   static authService = new AuthService();
   async login(req, res) {

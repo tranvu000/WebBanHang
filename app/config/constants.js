@@ -31,4 +31,4 @@ export const ORDER_STATUS = {
 
 export const NUMBER_VERIFY_CODE = 6;
 
-export const VERIFY_CODE_TIME_MILLISECONDS = 10 * 60 * 1000;
+export const VERIFY_CODE_TIME_MILLISECONDS = 60 * 1000;

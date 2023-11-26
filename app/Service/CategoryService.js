@@ -1,3 +1,4 @@
+import { generateUrlFromFirebase } from "../Common/helpers.js";
 import Category from "../Models/Category.js";
 import CategoryRepository from "../Repositories/CategoryRepository.js";
 
@@ -28,9 +29,14 @@ class CategoryService {
   };
 
   async show(categoryId) {
-    const categoryShow = await Category.findById(categoryId);
+    let category = await Category.findById(categoryId);
+    category = category.toObject();
 
-    return categoryShow;
+    if (category.image) {
+      category.image = await generateUrlFromFirebase(category.image)
+    };
+
+    return category;
   }
 
   async update(categoryId, data, authUser) {
