@@ -4,7 +4,9 @@ import {
   loginAuthValidator,
   registerAuthValidator,
   confirmAccountValidator,
-  changePasswordValidator
+  changePasswordValidator,
+  forgotPasswordValidator,
+  resetPasswordValidator
 } from "../../app/Validations/User/AuthValidation.js";
 
 const authRouter = (app) => {
@@ -15,6 +17,9 @@ const authRouter = (app) => {
   router.post('/login', loginAuthValidator, authController.login);
   router.post('/confirm-account', confirmAccountValidator, authController.confirmAccount);
   router.post('/confirm-account/change-password', changePasswordValidator, authController.changePassword );
+  router.post('/forgot-password', forgotPasswordValidator, authController.postSendCodeForgotPassword);
+  router.post('/reset-password', resetPasswordValidator, authController.postResetPassword)
+  
   router.post('/forgot-password', );
   
 

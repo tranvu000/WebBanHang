@@ -5,7 +5,8 @@ import {
   storeUpdateCategoryValidation,
   indexCategoryValidation
 } from '../../app/Validations/Admin/CategoryValidation.js';
-// import { uploadImageMiddleware } from '../../app/Middlewares/UploadImageMiddleware.js';
+import { uploadImageFirebaseMiddleware } from '../../app/Middlewares/UploadFirebaseMiddleware.js';
+import uploadImageMiddleware from '../../app/Middlewares/UploadImageMiddleware.js';
 
 const categoryRouter = (app) => {
   const router = express.Router();
@@ -13,10 +14,10 @@ const categoryRouter = (app) => {
 
   router.use(authMiddleware);
 
-  // router.post('/', uploadImageMiddleware.single('image'), storeUpdateCategoryValidation, categoryController.store);
+  router.post('/', uploadImageMiddleware.single('image'), uploadImageFirebaseMiddleware, storeUpdateCategoryValidation, categoryController.store)
   router.get('/', indexCategoryValidation, categoryController.index);
   router.get('/:categoryId', categoryController.show);
-  // router.put('/:categoryId', uploadImageMiddleware.single('image'), storeUpdateCategoryValidation, categoryController.update);
+  router.put('/:categoryId', uploadImageMiddleware.single('image'), uploadImageFirebaseMiddleware, storeUpdateCategoryValidation, categoryController.update)
   router.delete('/:categoryId', categoryController.destroy);
 
   app.use('/admin/category', router);

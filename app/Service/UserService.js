@@ -97,6 +97,7 @@ class UserService {
     };
 
     const result = await this.userRepository.update(userId, data, authUser);
+    
     return result;
   };
 

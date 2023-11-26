@@ -4,10 +4,12 @@ import User from "../Models/User.js";
 import Verify from "../Models/Verify.js";
 import UserRepository from "../Repositories/UserRepository.js";
 import { NUMBER_VERIFY_CODE, USERS} from "../config/constants.js";
-import vonage from "../config/nexmo.js";
+import TwilioMessenger from "./AuthenticationSMSService.js";
+
 class AuthService {
   constructor() {
     this.userRepository = new UserRepository();
+    this.twilioMessenger = new TwilioMessenger();
   };
 
   async register (data) {
@@ -132,15 +134,26 @@ class AuthService {
       throw new Error("Level khong chinh xac")
     };
     const verifyCode = generateVerifyCode(NUMBER_VERIFY_CODE);
+    const message = {
+      to: '+84962628409',
+      from: '+17082984908',
+      body: `OTP code: ${verifyCode}`
+    };
 
-    console.log(vonage);
     await Verify.findOneAndDelete({phone});
     await Verify.create({
       code: verifyCode,
       phone,
       dateCreated: Date.now(),
     });
-    return !!Verify;
+
+    const result = await this.twilioMessenger.sendMessage(message);
+
+    if (!result) {
+      return true
+    } else {
+      throw new HttpError('Gửi mã thấy bại', 409);
+    }
   };
 
   async postResetPassword(phone, password, verifyCode, level) {
@@ -169,7 +182,7 @@ class AuthService {
       { phone },
       { password: hashedPassword }
     );
-    console.log(response);
+    
     if (response.modifiedCount === 1) {
       await Verify.deleteOne({ phone });
       return true

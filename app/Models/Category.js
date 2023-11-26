@@ -9,10 +9,7 @@ const categorySchema = new mongoose.Schema(
     },
     image: {
       type: String,
-      get: (value) => {
-        return process.env.DOMAIN + '/category/image/' + value
-      },
-      default: 'default_category.png',
+      default: 'category/image/default_category.png',
     },
     created_by: {
       type: ObjectId

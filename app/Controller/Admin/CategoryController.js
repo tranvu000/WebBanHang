@@ -6,12 +6,7 @@ class CategoryController {
 
   async store(req, res) {
     try {
-      const data = {
-        name: req.body.name
-      };
-      if (req.file) {
-        data.image = req.file.filename;
-      };
+      const data = req.body;
 
       res.status(201).json(responseSuccess(
         await CategoryController.categoryService.store(
@@ -50,10 +45,6 @@ class CategoryController {
   async update(req, res) {
     try {
       const data = req.body;
-
-      if (req.file) {
-        data.image = req.file.filename;
-      };
 
       res.status(201).json(responseSuccess(
         await CategoryController.categoryService.update(
