@@ -21,7 +21,7 @@ class EmailService {
     templateParams
   ) {
     this.transporter.sendMail({
-      from: "tranvietvu0218@gmail.com", 
+      from: "tranvietvu0218@gmail.com",
       to: receiver,
       subject, 
       html: await renderFile(path.resolve('./views/' + template), templateParams)

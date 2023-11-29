@@ -8,6 +8,31 @@ import { USERS } from "../../config/constants.js";
 
 class AuthController {
   static authService = new AuthService();
+
+  async register (req, res) {
+    try {
+      const data = {
+        username: req.body.username,
+        email: req.body.email,
+        phone: req.body.phone,
+        password: req.body.password,
+        gender: req.body.gender,
+        level: req.body.level,
+      };
+      const level = USERS.levels.admin;
+
+      res.status(201).json(responseSuccess(
+        await AuthController.authService.register(
+          data,
+          level
+        ),
+        201
+      ));
+    } catch (e) {
+      res.status(500).json(responseError(e, 500))
+    };
+  };
+
   async login(req, res) {
     try {
       const level = USERS.levels.admin;
