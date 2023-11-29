@@ -5,6 +5,7 @@ import {
 } from "../../Common/helpers.js";
 import AuthService from "../../Service/AuthService.js";
 import { USERS } from "../../config/constants.js";
+
 class AuthController {
   static authService = new AuthService();
 
