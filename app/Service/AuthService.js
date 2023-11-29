@@ -5,14 +5,16 @@ import Verify from "../Models/Verify.js";
 import UserRepository from "../Repositories/UserRepository.js";
 import { NUMBER_VERIFY_CODE, USERS} from "../config/constants.js";
 import TwilioMessenger from "./AuthenticationSMSService.js";
+import EmailService from "./EmailService.js";
 
 class AuthService {
   constructor() {
     this.userRepository = new UserRepository();
+    this.emailService = new EmailService();
     this.twilioMessenger = new TwilioMessenger();
   };
 
-  async register (data) {
+  async register (data, level) {
     const userEmail = await User.findOne({email: data.email});
     if(!!userEmail) {
       throw new Error("Email da ton tai");
@@ -23,12 +25,22 @@ class AuthService {
       throw new Error("Phone number da ton tai");
     };
 
-    if (data.level != 1) {
+    if (data.level != level) {
       throw new Error("Level khong chinh xac");
     };
 
     data.password = hashString(data.password);
     const user = await this.userRepository.create(data)
+
+    await this.emailService.sendMailWithTemplate(
+      data.email,
+      "Dang ky tai khoan thanh cong",
+      'email_template/confirm_email.ejs',
+      {
+        name: data.username,
+        confirmUrl: 'https://web-ban-hang-fe.vercel.app/login'
+      }
+    );
 
     return user;
   }

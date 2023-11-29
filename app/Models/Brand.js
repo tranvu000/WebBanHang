@@ -12,7 +12,7 @@ const brandSchema = new mongoose.Schema (
     },
     logo: {
       type: String,
-      default: "brand/logo/default_logo.png",
+      // default: "brand/logo/default_logo.png",
     },
     created_by: {
       type: ObjectId

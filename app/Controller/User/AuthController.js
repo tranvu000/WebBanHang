@@ -15,10 +15,12 @@ class AuthController {
         gender: req.body.gender,
         level: req.body.level,
       };
+      const level = USERS.levels.user;
 
       res.status(201).json(responseSuccess(
         await AuthController.authService.register(
-          data
+          data,
+          level
         ),
         201
       ));

@@ -5,13 +5,15 @@ import {
   loginAuthValidator,
   changePasswordValidator,
   forgotPasswordValidator,
-  resetPasswordValidator
+  resetPasswordValidator,
+  registerAuthValidator
 } from "../../app/Validations/Admin/AuthValidations.js";
 
 const authAdminRouter = (app) => {
   const router = express.Router();
   const authController = new AuthController();
 
+  router.post('/register', registerAuthValidator, authController.register);
   router.post('/login', loginAuthValidator, authController.login);
   router.post('/confirm-account', confirmAccountValidator, authController.confirmAccount);
   router.post('/confirm-account/change-password', changePasswordValidator, authController.changePassword);

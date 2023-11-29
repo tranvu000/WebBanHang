@@ -1,9 +1,9 @@
 import express from "express";
 import ProfileController from "../../app/Controller/User/ProfileController.js";
 import authMiddleware from "../../app/Middlewares/AuthMiddleware.js";
-import { uploadAvatarFirebaseMiddleware } from "../../app/Middlewares/UploadFirebaseMiddleware.js";
 import { updateProfileValidator } from "../../app/Validations/User/ProfileValidation.js";
 import uploadImageMiddleware from "../../app/Middlewares/UploadImageMiddleware.js";
+import { uploadAvatarFirebaseMiddleware } from "../../app/Middlewares/FirebaseMiddleware.js";
 
 const profileRouter = (app) => {
   const router = express.Router();
