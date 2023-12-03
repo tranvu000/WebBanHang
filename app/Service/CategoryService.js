@@ -10,7 +10,7 @@ class CategoryService {
   async store(data, authUser) {
     const category = await this.categoryRepository.create(data, authUser);
 
-    return category;
+    return this.handleDataCategory(category);
   }
 
   async index(params) {
@@ -25,29 +25,40 @@ class CategoryService {
       }
     };
     
-    return await this.categoryRepository.index(conditions, limit, page);
+    const categories = await this.categoryRepository.index(conditions, limit, page);
+
+    categories.data = await Promise.all(categories.data.map(
+      async (category) => {
+        return await this.handleDataCategory(category)
+      }
+    ));
+
+    return categories;
   };
 
   async show(categoryId) {
-    let category = await Category.findById(categoryId);
-    category = category.toObject();
+    const category = await Category.findById(categoryId);
 
-    if (category.image) {
-      category.image = await generateUrlFromFirebase(category.image)
-    };
-
-    return category;
-  }
+    return this.handleDataCategory(category);
+  };
 
   async update(categoryId, data, authUser) {
-    return await this.categoryRepository.update(categoryId, data, authUser)
-  }
+    const category = await this.categoryRepository.update(categoryId, data, authUser)
+    
+    return this.handleDataCategory(category);
+  };
 
   async destroy(categoryId, authUser) {
-    const categoryDelete = await this.categoryRepository.destroy(categoryId, authUser, true);
+    const categoryDelete = await this.categoryRepository.destroy(categoryId, authUser, false);
 
     return categoryDelete;
-  }
+  };
+
+  async handleDataCategory (category) {
+    category.image = await generateUrlFromFirebase(category.image);
+
+    return category;
+  };
 };
 
 export default CategoryService;
