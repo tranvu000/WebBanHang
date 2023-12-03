@@ -12,7 +12,13 @@ const profileRouter = (app) => {
   router.use(authMiddleware)
 
   router.get('/', profileController.show);
-  router.put('/update', uploadImageMiddleware.single('avatar'), uploadAvatarFirebaseMiddleware, updateProfileValidator, profileController.update)
+  router.put(
+    '/update',
+    uploadImageMiddleware.single('avatar'),
+    uploadAvatarFirebaseMiddleware,
+    updateProfileValidator,
+    profileController.update
+  );
 
   app.use('/profile', router);
 };
