@@ -11,20 +11,6 @@ const productAdminRouter = (app) => {
 
   router.use(authMiddleware);
 
-  // router.post('/', storeUpdateProductAnyMiddleware.any([
-  //   {
-  //     name: 'images',
-  //     maxCount: 5,
-  //   },
-  //   {
-  //     name: 'video',
-  //     maxCount: 1,
-  //   },
-  //   {
-  //     name: 'classifies[][classify_values][][image]',
-  //     maxCount: 10,
-  //   },
-  // ]), storeUpdateProductValidator, productController.store);
   router.post(
     '/',
     uploadProductMiddleware.any([

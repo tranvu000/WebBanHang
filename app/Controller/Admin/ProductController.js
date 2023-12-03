@@ -11,20 +11,18 @@ class ProductController {
       
       for(let file of req.files) {
         if (file.fieldname === "images") {
-          data.images.push('/product/any/images/' + file.filename)
+          data.images.push(file.path)
         } else if (file.fieldname === "video") {
-          data.video = '/product/any/video/' + file.filename
+          data.video = file.path
         } else {
-          // const input = "classifies[0][classify_values][1][image]";
           const regex = /\[(\d+)\]/g;
           const matches = [...file.fieldname.matchAll(regex)].map((match) => parseInt(match[1]));
-          data.classifies[matches[0]].classify_values[matches[1]].image = 
-            '/product/any/classifies/image/' + 
-            file.filename
+          data.classifies[matches[0]].classify_values[matches[1]].image = file.path;
         }
       };
-    
-      const result = await ProductController.productService.store(data, req.authUser)
+
+      const result = await ProductController.productService.store(data, req.authUser);
+
       res.status(201).json(responseSuccess(
         result,
         201
@@ -65,18 +63,16 @@ class ProductController {
 
       for(let file of req.files) {
         if (file.fieldname === "images") {
-          data.images.push('storage/product/any/images/' + file.filename)
+          data.images.push(file.path);
         } else if (file.fieldname === "video") {
-          data.video = 'storage/product/any/video/' + file.filename
+          data.video = file.path;
         } else {
           const regex = /\[(\d+)\]/g;
           const matches = [...file.fieldname.matchAll(regex)].map((match) => parseInt(match[1]));
-          data.classifies[matches[0]].classify_values[matches[1]].image = 
-          'storage/product/any/classifies/image/' +
-          file.filename
+          data.classifies[matches[0]].classify_values[matches[1]].image = file.path;
         }
       };
-      
+      console.log('data>>>', data);
       res.status(201).json(responseSuccess(
         await ProductController.productService.update(
           req.params.productId,
