@@ -5,8 +5,8 @@ import ClassifyValueRepository from "../Repositories/ClassifyValueRepository.js"
 import CategoryRepository from "../Repositories/CategoryRepository.js";
 import BrandRepository from "../Repositories/BrandRepository.js"
 import Product from '../Models/Product.js'
-import ProductMedia from "../Models/ProductMedia.js";
-import Classify from "../Models/Classify.js";
+import { PRODUCT } from "../config/constants.js";
+import { generateUrlFromFirebase } from "../Common/helpers.js";
 class ProductService {
   constructor() {
     this.productRepository = new ProductRepository();
@@ -34,7 +34,7 @@ class ProductService {
         productMediaData.push({
             product_id: product._id,
             url: el,
-            type: 0
+            type: PRODUCT.type.images
         })
       })
     };
@@ -43,12 +43,12 @@ class ProductService {
       productMediaData.push({
         product_id: product._id,
         url: data.video,
-        type: 1
+        type: PRODUCT.type.video
       })
     };
     
     const productMedia = await this.productMediaRepository.createMultiple(productMediaData);
-    
+
     const classifiesData = [];
     data.classifies.forEach(el => {
       classifiesData.push({
@@ -57,6 +57,7 @@ class ProductService {
         description: el.description,
       })
     });
+
     const classifies = await this.classifyRepository.createMultiple(classifiesData);
 
     const classifiesValueData = [];
@@ -65,16 +66,16 @@ class ProductService {
         classifiesValueData.push({
           classify_id: classifies[index]._id,
           value: item.value,
-          image: item.image,
+          image: item.image || null,
         })
       })
     });
+
     const classifyValue = await this.classifyValueRepository.createMultiple(classifiesValueData);
 
-    return await product.populate([
+    await product.populate([
       {
         path: 'brand',
-        select: ['_id', 'name']
       },
       {
         path: 'category'
@@ -91,6 +92,8 @@ class ProductService {
         ]
       }
     ]);
+
+    return this.handleDataProduct(product);
   };
 
   async index(params) {
@@ -105,6 +108,7 @@ class ProductService {
       }
     };
 
+
     const productIndex = await this.productRepository.index(
       conditions,
       limit,
@@ -112,7 +116,6 @@ class ProductService {
       [
         {
           path: 'brand',
-          select: ['_id', "name"]
         },
         {
           path: 'category'
@@ -131,6 +134,12 @@ class ProductService {
       ]
     );
 
+    productIndex.data = await Promise.all(productIndex.data.map(
+      async (product) => {
+        return await this.handleDataProduct(product);
+      }
+    ));
+
     return productIndex;
   };
 
@@ -140,7 +149,6 @@ class ProductService {
     await productShow.populate([
       {
         path: 'brand',
-        select: ['_id', "name"]
       },
       {
         path: 'category'
@@ -158,10 +166,50 @@ class ProductService {
       }
     ]);
 
-    return productShow;
+    return this.handleDataProduct(productShow);
+
   };
 
   async update(productId, data, authUser) {
+    const productDelete = await Product.findById(productId).populate([
+      {
+        path: 'classifies',
+      }
+    ]);
+
+    if (!productDelete) {
+      return false;
+    }
+    const classifyIds = productDelete.classifies.map(
+      classify => classify._id
+    );
+    
+    const [productMediaDeleted, classifyDeleted, classifyValueDeleted] = await Promise.all([
+      this.productMediaRepository.destroyByConditions(
+        {
+          product_id: productId
+        },
+        null,
+        false
+      ),
+      this.classifyRepository.destroyByConditions(
+        {
+          product_id: productId
+        },
+        null,
+        false
+      ),
+      this.classifyValueRepository.destroyByConditions(
+        {
+          classify_id: {
+            $in: classifyIds
+          }
+        },
+        null,
+        false
+      )
+    ]);
+    
     const productData = {
       name: data.name,
       price: data.price,
@@ -171,8 +219,6 @@ class ProductService {
     }
     const product = await this.productRepository.update(productId, productData, authUser);    
 
-    const productMediaDelete = await ProductMedia.findByIdAndDelete(productId);
-
     const productMediaData = []
     if(data.images){
       const imageData = data.images
@@ -180,7 +226,7 @@ class ProductService {
         productMediaData.push({
             product_id: product._id,
             url: el,
-            type: 0
+            type: PRODUCT.type.images
         })
       });
     };
@@ -189,13 +235,12 @@ class ProductService {
       productMediaData.push({
         product_id: product._id,
         url: data.video,
-        type: 1
+        type: PRODUCT.type.video
       })
     };
     
     const productMedia = await this.productMediaRepository.createMultiple(productMediaData);
 
-    const classifiesDelete = await Classify.findByIdAndDelete(productId)
     const classifiesData = []
     data.classifies.forEach(el => {
       classifiesData.push({
@@ -218,10 +263,9 @@ class ProductService {
     })
     const classifyValue = await this.classifyValueRepository.createMultiple(classifiesValueData);
 
-    return await product.populate([
+    await product.populate([
       {
         path: 'brand',
-        select: ['_id', "name"]
       },
       {
         path: 'category'
@@ -237,7 +281,9 @@ class ProductService {
           }
         ]
       }
-    ])
+    ]);
+
+    return this.handleDataProduct(product);
   };
 
   async destroy(productId) {
@@ -419,6 +465,51 @@ class ProductService {
 
     return productdetails;
   };
+
+  async handleDataProduct (product) {
+    product.category = await Promise.all(product.category.map(
+      async (category) => {
+        category.image = await generateUrlFromFirebase(category.image);
+
+        return category;
+      }
+    ));
+
+    product.brand = await Promise.all(product.brand.map(
+      async (brand) => {
+        brand.logo = await generateUrlFromFirebase(brand.logo);
+
+        return brand;
+      }
+    ));
+
+    product.productMedia = await Promise.all(product.productMedia.map(
+      async (productMedia) => {
+        productMedia.url = await generateUrlFromFirebase(productMedia.url);
+
+        return productMedia;
+      }
+    ));
+    
+    product.classifies = await Promise.all(product.classifies.map(
+      async (classify) => {
+        classify.classify_values = await Promise.all(classify.classify_values.map(
+          async (classify_value) => {
+            if(!!classify_value.image) {
+              classify_value.image = await generateUrlFromFirebase(classify_value.image);
+            }
+
+            return classify_value;
+          }
+        ));
+
+        return classify;
+      }
+    ));
+
+    return product;
+  };
 };
+
 
 export default ProductService;

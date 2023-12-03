@@ -6,8 +6,8 @@ class BrandController {
 
   async store (req, res) {
     try {
-      const data = req.body
-
+      const data = req.body;
+      
       res.status(201).json(responseSuccess(
         await BrandController.brandService.store(
           data,

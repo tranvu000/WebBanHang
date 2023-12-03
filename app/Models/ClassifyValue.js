@@ -10,9 +10,9 @@ const classifyValueSchema = new mongoose.Schema(
     image: {
       type: String,
       require: true,
-      get: (value) => {
-        return process.env.DOMAIN + value
-      }
+      // get: (value) => {
+      //   return process.env.DOMAIN + value
+      // }
     },
     classify_id: {
       type: ObjectId,
