@@ -28,6 +28,7 @@ const productAdminRouter = (app) => {
       },
     ]),
     uploadProductFirebaseMiddleware,
+    storeUpdateProductValidator,
     productController.store
   );
   router.get('/', indexProductValidator, productController.index);
