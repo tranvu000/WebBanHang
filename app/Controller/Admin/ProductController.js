@@ -72,7 +72,7 @@ class ProductController {
           data.classifies[matches[0]].classify_values[matches[1]].image = file.path;
         }
       };
-      console.log('data>>>', data);
+   
       res.status(201).json(responseSuccess(
         await ProductController.productService.update(
           req.params.productId,

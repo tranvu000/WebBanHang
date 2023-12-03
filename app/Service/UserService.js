@@ -96,9 +96,10 @@ class UserService {
       };
     };
 
-    const result = await this.userRepository.update(userId, data, authUser);
-    
-    return result;
+    const user = await this.userRepository.update(userId, data, authUser);
+    user.avatar = await generateUrlFromFirebase(user.avatar);
+
+    return user;
   };
 
   async destroy(userId, authUser) {
