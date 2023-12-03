@@ -28,13 +28,12 @@ class BrandService {
     const brands = await this.brandRepository.index(conditions, limit, page);
  
     brands.data = await Promise.all(brands.data.map(
-      async(brand) => {
+      async (brand) => {
         return await this.handleDataBrand(brand)
       }
     ));
 
     return brands
-
   };
 
   async show (brandId) {

@@ -1,4 +1,4 @@
-import { responseSuccess, responseError } from "../../Common/helpers.js";
+import { responseSuccess, responseError, generateUrlFromFirebase } from "../../Common/helpers.js";
 import CategoryService from "../../Service/CategoryService.js";
 
 class CategoryController {
@@ -79,8 +79,7 @@ class CategoryController {
     } catch (e) {
       res.status(500).json(responseError(e, 500));
     }
-  }
-  
+  };
 };
 
 export default CategoryController;
