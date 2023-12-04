@@ -331,18 +331,18 @@ class ProductService {
   };
 
   async searchProduct (params) {
-    let {keyword, limit, page} = params;
+    let { keyword, limit, page } = params;
     limit = +limit;
     page = +page;
     let conditions = {};
 
-    if(keyword) {
+    if (keyword) {
       conditions = {
         name: new RegExp (`${keyword}`, 'i')
       }
     };
 
-    const searchProduct = await this.productRepository.index(
+    const products = await this.productRepository.index(
       conditions,
       limit,
       page,
@@ -354,9 +354,21 @@ class ProductService {
       ],
     );
 
+    products.data = await Promise.all(products.data.map(
+      async (product) => {
+        product.productMedia = await Promise.all(product.productMedia.map(
+          async (productMedia) => {
+            productMedia.url = await generateUrlFromFirebase(productMedia.url);
     
+            return productMedia;
+          }
+        ));
 
-    return searchProduct;
+        return product;
+      }
+    ));
+
+    return products;
   };
 
   async searchBrand (params) {
@@ -371,13 +383,21 @@ class ProductService {
       }
     };
 
-    const searchBrand = await this.brandRepository.index(
+    const brands = await this.brandRepository.index(
       conditions,
       limit,
       page,
     );
 
-    return searchBrand;
+    brands.data = await Promise.all(brands.data.map(
+      async (brand) => {
+        brand.logo = await generateUrlFromFirebase(brand.logo);
+
+        return brand;
+      }
+    ));
+
+    return brands;
   };
 
   async listCategory (params) {
@@ -386,15 +406,23 @@ class ProductService {
     page = +page;
     let conditions = {};
 
-    const productCategory = await this.categoryRepository.index(
+    const categories = await this.categoryRepository.index(
       conditions,
       limit,
       page,
       [],
       ['image', 'name']
     );
+    
+    categories.data = await Promise.all(categories.data.map(
+      async (category) => {
+        category.image = await generateUrlFromFirebase(category.image);
 
-    return productCategory;
+        return category;
+      }
+    ));
+
+    return categories;
   };
 
   async listProduct (params) {
@@ -403,7 +431,7 @@ class ProductService {
     page = +page;
     let conditions = {};
 
-    const productList = await this.productRepository.index(
+    const products = await this.productRepository.index(
       conditions,
       limit,
       page,
@@ -415,7 +443,21 @@ class ProductService {
       ]
     );
 
-    return productList;
+    products.data = await Promise.all(products.data.map(
+      async (product) => {
+        product.productMedia = await Promise.all(product.productMedia.map(
+          async (productMedia) => {
+            productMedia.url = await generateUrlFromFirebase(productMedia.url);
+    
+            return productMedia;
+          }
+        ));
+
+        return product;
+      }
+    ));
+
+    return products;
   };
 
   async listProductByCategory (params) {
@@ -430,7 +472,7 @@ class ProductService {
       }
     };
 
-    const listProductByCategory = await this.productRepository.index(
+    const products = await this.productRepository.index(
       conditions,
       limit,
       page,
@@ -442,7 +484,21 @@ class ProductService {
       ]
     );
 
-    return listProductByCategory;
+    products.data = await Promise.all(products.data.map(
+      async (product) => {
+        product.productMedia = await Promise.all(product.productMedia.map(
+          async (productMedia) => {
+            productMedia.url = await generateUrlFromFirebase(productMedia.url);
+    
+            return productMedia;
+          }
+        ));
+
+        return product;
+      }
+    ));
+
+    return products;
   }
 
   async details (productId) {
@@ -451,6 +507,9 @@ class ProductService {
     await productdetails.populate([
       {
         path: 'category'
+      },
+      {
+        path: 'brand'
       },
       {
         path: 'productMedia'
@@ -465,7 +524,7 @@ class ProductService {
       }
     ]);
 
-    return productdetails;
+    return this.handleDataProduct(productdetails);
   };
 
   async handleDataProduct (product) {
