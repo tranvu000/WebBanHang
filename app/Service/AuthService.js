@@ -1,4 +1,4 @@
-import { generateJWT, hashString, parserJWTToken, generateVerifyCode, isVerifyPhone } from "../Common/helpers.js";
+import { generateJWT, hashString, parserJWTToken, generateVerifyCode, isVerifyPhone, generateUrlFromFirebase } from "../Common/helpers.js";
 import HttpError from "../Exceptions/HttpError.js";
 import User from "../Models/User.js";
 import Verify from "../Models/Verify.js";
@@ -16,11 +16,13 @@ class AuthService {
 
   async register (data, level) {
     const userEmail = await User.findOne({email: data.email});
+
     if(!!userEmail) {
       throw new Error("Email da ton tai");
     };
 
     const userPhone = await User.findOne({phone: data.phone});
+
     if(!!userPhone) {
       throw new Error("Phone number da ton tai");
     };
@@ -30,7 +32,7 @@ class AuthService {
     };
 
     data.password = hashString(data.password);
-    const user = await this.userRepository.create(data)
+    const user = await this.userRepository.create(data);
 
     await this.emailService.sendMailWithTemplate(
       data.email,
@@ -42,6 +44,8 @@ class AuthService {
       }
     );
 
+    user.avatar = await generateUrlFromFirebase(user.avatar);
+    
     return user;
   }
 
@@ -56,6 +60,7 @@ class AuthService {
         }
       ]
     });
+
     if (!userByName) {
       throw new Error("Tai khoan khong chinh xac");
     } else if (userByName.level != level) {

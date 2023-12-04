@@ -1,5 +1,6 @@
 import { hashString, responseError, responseSuccess } from "../../Common/helpers.js";
 import UserService from "../../Service/UserService.js";
+import { USERS } from "../../config/constants.js";
 class ProfileController {
   static userService = new UserService();
   
@@ -9,7 +10,7 @@ class ProfileController {
         throw new Error('User khong ton tai')
       };
 
-      if (req.authUser.level !== 0) {
+      if (req.authUser.level !== USERS.levels.admin) {
         throw new Error('Level khong phu hop')
       };
       
@@ -30,19 +31,20 @@ class ProfileController {
         throw new Error('User khong ton tai')
       };
 
-      if (req.authUser.level !== 0) {
+      if (req.authUser.level !== USERS.levels.admin) {
         throw new Error('Level khong phu hop')
       };
 
       const userId = req.authUser._id;
       const data = req.body;
+
       res.status(201).json(responseSuccess(
         await ProfileController.userService.updateUser(
           userId,
           data,
           req.authUser
         )
-      ))
+      ));
     } catch (e) {
       res.status(500).json(responseError(e, 500))
     }
