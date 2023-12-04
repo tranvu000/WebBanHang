@@ -56,10 +56,18 @@ class OrderController {
 
   async update(req, res) {
     try {
+      const data = {
+        status: req.body.status
+      };
+
+      if (!Object.values(ORDER_STATUS).includes(data.status)) {
+        throw new Error('Trạng thái không hợp lệ')
+      };
+      
       res.status(201).json(responseSuccess(
         await OrderController.orderService.update(
           req.params.orderId,
-          req.body,
+          data,
           req.authUser
         ),
         201

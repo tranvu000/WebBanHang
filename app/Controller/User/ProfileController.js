@@ -1,6 +1,7 @@
-import { generateUrlFromFirebase, hashString, responseError, responseSuccess } from "../../Common/helpers.js";
+import { responseError, responseSuccess } from "../../Common/helpers.js";
 import UserService from "../../Service/UserService.js";
-import firebase from "../../config/firebase.js";
+import { USERS } from "../../config/constants.js";
+
 class ProfileController {
   static userService = new UserService();
   async show (req, res) {
@@ -9,7 +10,7 @@ class ProfileController {
         throw new Error('User khong ton tai')
       };
 
-      if (req.authUser.level !== 1) {
+      if (req.authUser.level !== USERS.levels.user) {
         throw new Error('Level khong phu hop')
       };
 
@@ -30,12 +31,13 @@ class ProfileController {
         throw new Error('User khong ton tai')
       };
 
-      if (req.authUser.level !== 1) {
+      if (req.authUser.level !== USERS.levels.user) {
         throw new Error('Level khong phu hop')
       };
       
       const userId = req.authUser._id;
       const data = req.body;
+      
       res.status(201).json(responseSuccess(
         await ProfileController.userService.updateUser(
           userId,
