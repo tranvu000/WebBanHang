@@ -6,6 +6,7 @@ import ProductRepository from "../Repositories/ProductRepository.js";
 import Order from "../Models/Order.js";
 import OrderDetails from "../Models/OrderDetails.js";
 import OrderDetailClassifyValuesRepository from "../Repositories/OrderDetailClassifyValuesRepository.js"
+import { generateUrlFromFirebase } from "../Common/helpers.js";
 
 class OrderService {
   constructor() {
@@ -70,7 +71,7 @@ class OrderService {
     
     await this.orderDetailClassifyValuesRepository.createMultiple(orderDetailClassifyValueData)
     
-    return await order.populate([
+    await order.populate([
       {
         path: 'order_details',
         populate: [
@@ -89,6 +90,8 @@ class OrderService {
         ]
       }
     ]);
+    
+    return this.handleDataOrder(order);
   };
 
   async index (params) {
@@ -135,7 +138,7 @@ class OrderService {
           match: {
             product_id: {$exists: true},
           },
-          match: conditions,
+          // match: conditions,
           populate: [
             {
               path: 'product',
@@ -155,35 +158,41 @@ class OrderService {
       ]
     );
 
+    orders.data = await Promise.all(orders.data.map(
+      async (order) => {
+        return await this.handleDataOrder(order);
+      }
+    ));
+
     return orders;
   };
 
   async list (authUserId) {
-    const orderList = await Order.find({user_id: authUserId});
-    const populateOrder = await Promise.all(orderList.map(async (order) => {
-      return order.populate([
+    const orderList = await Order.find({ user_id: authUserId })
+    .populate({
+      path: 'order_details',
+      populate: [
         {
-          path: 'order_details',
+          path: 'product',
+          select: 'name',
+        },
+        {
+          path: 'orderDetailClassifyValues',
           populate: [
             {
-              path: 'product',
-              select: 'name',
+              path: 'classify_values',
             },
-            {
-              path: 'orderDetailClassifyValues',
-              populate: [
-                {
-                  path: 'classify_values'
-                }
-              ]
-            }
-          ]
-        }
-      ])
-    }));
+          ],
+        },
+      ],
+    });
 
-    return populateOrder;
-  }
+  const orders = await Promise.all(orderList.map(async (order) => {
+    return await this.handleDataOrder(order);
+  }));
+
+  return orders;
+  };
 
   async update (orderId, data, authUser) {
     const order = await this.orderRepository.update(
@@ -192,7 +201,7 @@ class OrderService {
       authUser
     );
     
-    return await order.populate([
+    await order.populate([
       {
         path: 'order_details',
         populate: [
@@ -211,6 +220,31 @@ class OrderService {
         ]
       }
     ]);
+
+    return this.handleDataOrder(order);
+  };
+
+  async handleDataOrder (order) {
+    const updateImage = async (classify_value) => {
+      if (classify_value.image != null) {
+        classify_value.image = await generateUrlFromFirebase(classify_value.image);
+      };
+
+      return classify_value;
+    };
+
+    for (const order_detail of order.order_details) {
+      order_detail.orderDetailClassifyValues = await Promise.all(
+        order_detail.orderDetailClassifyValues.map(async (orderDetailClassifyValue) => {
+          orderDetailClassifyValue.classify_values = await Promise.all(
+            orderDetailClassifyValue.classify_values.map(updateImage)
+          );
+          return orderDetailClassifyValue;
+        })
+      );
+    };
+
+    return order;
   };
 };
 
