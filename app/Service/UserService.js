@@ -32,7 +32,7 @@ class UserService {
       }
     );
 
-    return user;
+    return this.handleDataUser(user);
   }
 
   async index(params) {
@@ -59,18 +59,21 @@ class UserService {
       ];
     }
 
-    return await this.userRepository.index(conditions, limit, page);
+    const users = await this.userRepository.index(conditions, limit, page);
+
+    users.data = await Promise.all(users.data.map(
+      async (user) => {
+        return await this.handleDataUser(user)
+      }
+    ));
+
+    return users;
   };
 
   async show(userId) {
     let user = await User.findById(userId);
-    user = user.toObject();
 
-    if (user.avatar) {
-      user.avatar = await generateUrlFromFirebase(user.avatar);
-    };
-    
-    return user;
+    return this.handleDataUser(user);
   };
 
   async update(userId, data, authUser) {
@@ -80,6 +83,7 @@ class UserService {
   async updateUser(userId, data, authUser) {
     const email_new = data.email;
     const { email } = await User.findById(userId);
+
     if (email_new !== email) {
       const userEmail = await User.findOne({email: email_new});
       if (!!userEmail) {
@@ -89,6 +93,7 @@ class UserService {
 
     const phone_new = data.phone;
     const { phone } = await User.findById(userId);
+
     if (phone_new !== phone) {
       const userPhone = await User.findOne({phone: phone_new});
       if (!!userPhone) {
@@ -97,15 +102,20 @@ class UserService {
     };
 
     const user = await this.userRepository.update(userId, data, authUser);
-    user.avatar = await generateUrlFromFirebase(user.avatar);
 
-    return user;
+    return this.handleDataUser(user);
   };
 
   async destroy(userId, authUser) {
     const userDeleted = await this.userRepository.destroy(userId, authUser, true);
 
     return userDeleted;
+  };
+
+  async handleDataUser (user) {
+    user.avatar = await generateUrlFromFirebase(user.avatar);
+
+    return user;
   };
 };
 

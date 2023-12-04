@@ -40,7 +40,6 @@ class BaseRepository {
   };
 
   async update(id, data, authUser) {
-    
     return await this.getModel().findByIdAndUpdate(
       id,
       {

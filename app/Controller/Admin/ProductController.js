@@ -23,10 +23,7 @@ class ProductController {
 
       const result = await ProductController.productService.store(data, req.authUser);
 
-      res.status(201).json(responseSuccess(
-        result,
-        201
-      ));
+      res.status(201).json(responseSuccess(result, 201));
     } catch (e) {
       res.status(500).json(responseError(e, 500))
     }
@@ -89,7 +86,8 @@ class ProductController {
     try {
       res.status(201).json(responseSuccess(
         !!await ProductController.productService.destroy(
-          req.params.productId
+          req.params.productId,
+          req.authUser
         ),
         201
       ))

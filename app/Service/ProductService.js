@@ -109,7 +109,7 @@ class ProductService {
     };
 
 
-    const productIndex = await this.productRepository.index(
+    const products = await this.productRepository.index(
       conditions,
       limit,
       page,
@@ -134,13 +134,13 @@ class ProductService {
       ]
     );
 
-    productIndex.data = await Promise.all(productIndex.data.map(
+    products.data = await Promise.all(products.data.map(
       async (product) => {
         return await this.handleDataProduct(product);
       }
     ));
 
-    return productIndex;
+    return products;
   };
 
   async show(productId) {
@@ -171,6 +171,15 @@ class ProductService {
   };
 
   async update(productId, data, authUser) {
+    const productData = {
+      name: data.name,
+      price: data.price,
+      discount: data.discount,
+      category_id: data.category_id,
+      brand_id: data.brand_id
+    }
+    const product = await this.productRepository.update(productId, productData, authUser);    
+
     const productDelete = await Product.findById(productId).populate([
       {
         path: 'classifies',
@@ -209,15 +218,6 @@ class ProductService {
         false
       )
     ]);
-    
-    const productData = {
-      name: data.name,
-      price: data.price,
-      discount: data.discount,
-      category_id: data.category_id,
-      brand_id: data.brand_id
-    }
-    const product = await this.productRepository.update(productId, productData, authUser);    
 
     const productMediaData = []
     if(data.images){
@@ -286,7 +286,7 @@ class ProductService {
     return this.handleDataProduct(product);
   };
 
-  async destroy(productId) {
+  async destroy(productId, authUser) {
     const productDelete = await Product.findById(productId).populate([
       {
         path: 'classifies',
@@ -301,19 +301,19 @@ class ProductService {
     );
     
     const [productDeleted, productMediaDeleted, classifyDeleted, classifyValueDeleted] = await Promise.all([
-      this.productRepository.destroy(productId, null, false),
+      this.productRepository.destroy(productId, authUser, false),
       this.productMediaRepository.destroyByConditions(
         {
           product_id: productId
         },
-        null,
+        authUser,
         false
       ),
       this.classifyRepository.destroyByConditions(
         {
           product_id: productId
         },
-        null,
+        authUser,
         false
       ),
       this.classifyValueRepository.destroyByConditions(
@@ -322,7 +322,7 @@ class ProductService {
             $in: classifyIds
           }
         },
-        null,
+        authUser,
         false
       )
     ]);
@@ -353,6 +353,8 @@ class ProductService {
         },
       ],
     );
+
+    
 
     return searchProduct;
   };
