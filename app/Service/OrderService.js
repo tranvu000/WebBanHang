@@ -1,10 +1,7 @@
-import authRouter from "../../router/User/auth.js";
 import OrderRepository from "../Repositories/OrderRepository.js";
 import OrderDetailsRepository from "../Repositories/OrderDetailsRepository.js";
-import Product from "../Models/Product.js";
 import ProductRepository from "../Repositories/ProductRepository.js";
 import Order from "../Models/Order.js";
-import OrderDetails from "../Models/OrderDetails.js";
 import OrderDetailClassifyValuesRepository from "../Repositories/OrderDetailClassifyValuesRepository.js"
 import { generateUrlFromFirebase } from "../Common/helpers.js";
 
@@ -16,7 +13,7 @@ class OrderService {
     this.orderDetailClassifyValuesRepository = new OrderDetailClassifyValuesRepository();
   };
 
-  async createOrder (data, authUser) {
+  async store (data, authUser) {
     const productIds = data.order_details.map(
       orderDetail => orderDetail.product_id
     );

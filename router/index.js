@@ -8,7 +8,7 @@ import productAdminRouter from "./Admin/product.js";
 import authRouter from "./User/auth.js";
 import productRouter from "./User/product.js";
 import profileRouter from "./User/profile.js";
-import shoppingCartsRouter from "./User/shoppingCarts.js";
+import shoppingCartRouter from "./User/shoppingCart.js";
 import orderRouter from "./User/order.js";
 
 const router = (app) => {
@@ -22,7 +22,7 @@ const router = (app) => {
   authRouter(app);
   productRouter(app);
   profileRouter(app);
-  shoppingCartsRouter(app);
+  shoppingCartRouter(app);
   orderRouter(app)
 }
 
