@@ -13,7 +13,7 @@ const orderRouter = (app) => {
 
   router.use(authMiddleware);
 
-  router.post('/', storeOrderValidator, orderController.createOrder);
+  router.post('/', storeOrderValidator, orderController.store);
   router.get('/', indexOrderValidator, orderController.index);
   router.get('/list', orderController.list);
   router.put('/:orderId', updateOrderValidator, orderController.update);
