@@ -56,7 +56,7 @@ class CategoryService {
 
   async handleDataCategory (category) {
     category.image = await generateUrlFromFirebase(category.image);
-
+    
     return category;
   };
 };

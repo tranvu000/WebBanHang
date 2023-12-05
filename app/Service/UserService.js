@@ -114,7 +114,7 @@ class UserService {
 
   async handleDataUser (user) {
     user.avatar = await generateUrlFromFirebase(user.avatar);
-
+    
     return user;
   };
 };

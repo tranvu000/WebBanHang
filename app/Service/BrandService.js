@@ -56,7 +56,7 @@ class BrandService {
 
   async handleDataBrand (brand) {
     brand.logo = await generateUrlFromFirebase(brand.logo);
-
+    
     return brand;
   };
 };
