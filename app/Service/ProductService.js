@@ -556,9 +556,9 @@ class ProductService {
       async (classify) => {
         classify.classify_values = await Promise.all(classify.classify_values.map(
           async (classify_value) => {
-            if(!!classify_value.image) {
+            if(classify_value.image != null) {
               classify_value.image = await generateUrlFromFirebase(classify_value.image);
-            }
+            };
 
             return classify_value;
           }

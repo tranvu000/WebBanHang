@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
-import firebase from "../config/firebase.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -73,18 +72,5 @@ const userSchema = new mongoose.Schema(
     id: false
   }
 );
-// userSchema.virtual('_avatar').get(async function () {
-//   return await this.getAvatarFromFirebase();
-// });
-// userSchema.method('getAvatarFromFirebase', async function (cb) {
-//   const blob = firebase.bucket.file(this.avatar);
-//   const options = {
-//     version: 'v2',
-//     action: 'read',
-//     expires: Date.now() + 1000 * 60 * 60
-//   };
-//   const url = await blob.getSignedUrl(options);
-//   return url[0];
-// });
 
 export default mongoose.model("User", userSchema, "users");

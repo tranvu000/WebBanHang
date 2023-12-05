@@ -4,11 +4,10 @@ import { responseError } from "../Common/helpers.js";
 
 export const uploadAvatarFirebaseMiddleware = async (req, res, next) => {
   if (!req.file) {
-    return res.status(400).send("Error: No files found");
-  }
+    return next();
+  };
 
-  const fileName =
-    "user/avatar/" + moment().unix() + "-" + req.file.originalname;
+  const fileName = "user/avatar/" + moment().unix() + "-" + req.file.originalname;
   const blob = firebase.bucket.file(fileName);
   const blobWriter = blob.createWriteStream({
     metadata: {
@@ -30,11 +29,10 @@ export const uploadAvatarFirebaseMiddleware = async (req, res, next) => {
 
 export const uploadLogoBrandFirebaseMiddleware = async (req, res, next) => {
   if (!req.file) {
-    return res.status(400).send("Error: No files found");
-  }
-
-  const fileName =
-    "brand/logo/" + moment().unix() + "-" + req.file.originalname;
+    return next();
+  };
+  
+  const fileName = "brand/logo/" + moment().unix() + "-" + req.file.originalname;
   const blob = firebase.bucket.file(fileName);
   const blobWriter = blob.createWriteStream({
     metadata: {
@@ -56,8 +54,8 @@ export const uploadLogoBrandFirebaseMiddleware = async (req, res, next) => {
 
 export const uploadImageCategoryFirebaseMiddleware = async (req, res, next) => {
   if (!req.file) {
-    return res.status(400).send("Error: No files found");
-  }
+    return next();
+  };
 
   const fileName = "category/image/" + moment().unix() + "-" + req.file.originalname;
   const blob = firebase.bucket.file(fileName);
@@ -80,10 +78,6 @@ export const uploadImageCategoryFirebaseMiddleware = async (req, res, next) => {
 };
 
 export const uploadProductFirebaseMiddleware = async (req, res, next) => {
-  if (!req.files) {
-    return res.status(400).send("Error: No files found");
-  };
-
   const renderFileName = (file) => {
     let fileName;
     if (file.fieldname === "images") {

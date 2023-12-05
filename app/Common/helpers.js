@@ -178,10 +178,10 @@ export const generateUrlFromFirebase = async (path) => {
   const options = {
     version: 'v2',
     action: 'read',
-    expires: moment().add('hours', 1)
+    expires: moment().add(1, 'hours')
   };
   const url = await blob.getSignedUrl(options);
 
   return url[0]; //bỏ không nếu lấy 1 mảng
-}
+};
 
