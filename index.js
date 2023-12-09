@@ -7,14 +7,11 @@ import mongoDbConnect from "./database/mongodb.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
 
-
-
 mongoDbConnect();
 
 const app = express();
 
 app.use(cors());
-
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -27,7 +24,6 @@ io.of('admins').on('connection', (socket) => {
     io.of('admins').to('room1').emit('server_send', { data: 'server send data ' + socket.id })
   })
 })
-
 
 app.use(express.json());
 app.use(express.static("storage"));

@@ -18,7 +18,7 @@ const adminUserRouter = (app) => {
   router.put("/:userId",storeUpdateUserValidator, userController.update);
   router.delete("/:userId", userController.destroy);
 
-  app.use("/users", router);
+  app.use("/admin/users", router);
 };
 
 export default adminUserRouter;
