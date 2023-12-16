@@ -28,10 +28,11 @@ export const responseError = (errors, status = 500) => {
         [error.path]: {
           value: error.value,
           message: error.message,
-        },
-      };
+        }
+      }
     });
-  }
+  };
+
   return response;
 };
 
