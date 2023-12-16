@@ -28,7 +28,7 @@ io.of('admins').on('connection', (socket) => {
 app.use(express.json());
 app.use(express.static("storage"));
 
-router(app)
+router(app);
 
 app.use((err, req, res, next) => {
   if(err instanceof MulterError) {
